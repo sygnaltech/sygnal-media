@@ -1,0 +1,83 @@
+
+:root {
+  --cc-audio-wavesurfer-top: #656666;
+  --cc-audio-wavesurfer-separator: #ffffff;
+  --cc-audio-wavesurfer-bottom: #B1B1B1;
+
+  --cc-audio-wavesurfer-progress-top: #EE772F;
+  --cc-audio-wavesurfer-progress-mid: #EB4926;
+  --cc-audio-wavesurfer-progress-bottom: #F6B094;
+
+  --cc-audio-wavesurfer-button-size: 80px; 
+}
+
+#player #pause {
+  display: none; 
+}
+
+#player svg {
+    width: var(--cc-audio-wavesurfer-button-size, 80px); 
+    height: var(--cc-audio-wavesurfer-button-size, 80px); 
+    color: var(--cc-audio-wavesurfer-icon, #333333);
+  }
+
+#player {
+  display: flex;
+  gap: 10px;
+}
+
+#player > :first-child {
+  flex: 0 0 80px;
+    align-self: center;
+  cursor: pointer; 
+}
+
+#player > :not(:first-child) {
+  flex: 1 1 auto;
+}
+
+
+#play, #pause {
+  max-width: 80px;
+  max-height: 80px;
+}
+
+
+    #waveform {
+      cursor: pointer;
+      position: relative;
+    }
+    #hover {
+      position: absolute;
+      left: 0;
+      top: 0;
+      z-index: 10;
+      pointer-events: none;
+      height: 100%;
+      width: 0;
+      mix-blend-mode: overlay;
+      background: rgba(255, 255, 255, 0.5);
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+    #waveform:hover #hover {
+      opacity: 1;
+    }
+    #time,
+    #duration {
+      position: absolute;
+      z-index: 11;
+      top: 50%;
+      margin-top: -1px;
+      transform: translateY(-50%);
+      font-size: 11px;
+      background: rgba(0, 0, 0, 0.75);
+      padding: 2px;
+      color: #ddd;
+    }
+    #time {
+      left: 0;
+    }
+    #duration {
+      right: 0;
+    }
