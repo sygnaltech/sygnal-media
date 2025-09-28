@@ -1,16 +1,16 @@
 {
   "library": {
-    "name": "Sygnal Media",
+    "name": "Sygnal Media v0.1.0",
     "components": [
       "./src/**/*.webflow.@(js|jsx|mjs|ts|tsx)"
     ],
-    "description": "Sygnal Media Components",
+    "description": "Sygnal Media",
     "id": "sygnal-media"
   },
   "telemetry": {
     "global": {
       "allowTelemetry": true,
-      "lastPrompted": 1757371775705,
+      "lastPrompted": 1757464785972,
       "version": "1.8.40"
     }
   }

@@ -1,0 +1,28 @@
+name: Share Webflow Code Components
+on:
+  workflow_dispatch:
+    inputs:
+      manifest_path:
+        description: Path to webflow.json
+        default: webflow.json
+        required: true
+      node_version:
+        description: Node version
+        default: "20"
+        required: true
+      api_token:
+        description: Webflow Workspace API Token
+        required: true
+
+jobs:
+  share:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ inputs.node_version }}
+          cache: npm
+      - run: npm ci
+      - name: Share library to Webflow Workspace
+        run: npx webflow library share --no-input --manifest "${{ inputs.manifest_path }}" --api-token "${{ inputs.api_token }}"
