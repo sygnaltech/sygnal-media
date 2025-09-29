@@ -2,7 +2,8 @@ import logo from './logo.svg';
 import './App.css';
 import { Badge } from './Badge';
 import { AudioWavesurfer } from './AudioWavesurfer';
-import { Spline } from './Spline'; 
+import { Spline } from './Spline';
+import { Rive } from './Rive'; 
 
 //import { MapPin } from './MapPin'; 
 
@@ -190,6 +191,19 @@ function App() {
 
 
 
+
+      {/* Rive Animation Test */}
+      <div style={{ margin: '20px 0' }}>
+        <h2>Rive Animation - Vehicles</h2>
+        <Rive
+          riveUrl="/vehicles.riv"
+          width="100%"
+          height="400px"
+          autoplay={true}
+          onLoad={() => console.log('Rive animation loaded successfully')}
+          onError={(error) => console.error('Rive error:', error)}
+        />
+      </div>
 
     </div>
   );
