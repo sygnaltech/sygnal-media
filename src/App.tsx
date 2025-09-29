@@ -196,9 +196,10 @@ function App() {
       <div style={{ margin: '20px 0' }}>
         <h2>Rive Animation - Vehicles</h2>
         <Rive
-          riveUrl="/vehicles.riv"
+          riveUrl="/wf-rive-placeholder.riv"
           width="100%"
           height="400px"
+          artboard="Jeep"
           autoplay={true}
           onLoad={() => console.log('Rive animation loaded successfully')}
           onError={(error) => console.error('Rive error:', error)}

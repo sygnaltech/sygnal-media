@@ -26,7 +26,7 @@ export default declareComponent(Rive, {
             group: "Animation"
         }),
         fit: props.Variant({
-            name: "Fit",
+            name: "Fit ⚠️",
             tooltip: "How the animation should fit within its container",
             options: ["Contain", "Cover", "Fill", "Fit Width", "Fit Height", "None", "Scale Down"],
             defaultValue: "Contain",

@@ -98,6 +98,8 @@ export const Rive: React.FC<RiveProps> = ({
           fit: getRiveFitValue(fit),
           onLoad: () => {
             console.log('Rive animation loaded successfully');
+            // Fix blurriness on high-DPI displays by adjusting canvas resolution
+            riveInstance.resizeDrawingSurfaceToCanvas();
             if (onLoad) onLoad();
           },
           onLoadError: (error: Error) => {
