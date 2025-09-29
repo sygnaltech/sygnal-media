@@ -1,7 +1,8 @@
 import logo from './logo.svg';
 import './App.css';
 import { Badge } from './Badge';
-import { AudioWavesurfer } from './AudioWavesurfer'; 
+import { AudioWavesurfer } from './AudioWavesurfer';
+import { Spline } from './Spline'; 
 
 //import { MapPin } from './MapPin'; 
 
@@ -158,10 +159,22 @@ function App() {
       {/* Example of player without ID (for testing mixed scenarios) */}
       <div style={{ margin: '20px 0' }}>
         <h2>Player Without ID (No External Control)</h2>
-        <AudioWavesurfer 
+        <AudioWavesurfer
           mp3={{ href: "https://cdn.prod.website-files.com/68853e90d57507843bfd4e55/6885e30a3ded00edb2723011_Chainsmokers.mp3" }}
           loop="false"
           preload="true"
+        />
+      </div>
+
+      {/* Spline 3D Scene Test */}
+      <div style={{ margin: '20px 0' }}>
+        <h2>3D Spline Scene1</h2>
+        <Spline
+          splineUrl="https://prod.spline.design/yVDxdZWJmBEGK11j/scene.splinecode"
+          width="100%"
+          height="600px"
+          onLoad={(spline) => console.log('Spline scene loaded:', spline)}
+          onError={(error) => console.error('Spline error:', error)}
         />
       </div>
 
