@@ -50,18 +50,19 @@ export const Rive: React.FC<RiveProps> = ({
 
   const urlString = getUrlString(riveUrl);
 
-  // Map Webflow variant values to Rive.Fit enum values
+  // Map Webflow variant values to Rive.Fit enum values 
+  // https://rive.app/docs/runtimes/layout 
   const getRiveFitValue = (webflowFit: string) => {
     // We'll get the Rive module dynamically, so return string values for now
     switch (webflowFit) {
-      case 'Contain': return 'CONTAIN';
-      case 'Cover': return 'COVER';
-      case 'Fill': return 'FILL';
-      case 'Fit Width': return 'FIT_WIDTH';
-      case 'Fit Height': return 'FIT_HEIGHT';
-      case 'None': return 'NONE';
-      case 'Scale Down': return 'SCALE_DOWN';
-      default: return 'CONTAIN';
+      case 'Contain': return 'Contain';
+      case 'Cover': return 'Cover';
+      case 'Fill': return 'Fill';
+      case 'Fit Width': return 'FitWidth';
+      case 'Fit Height': return 'FitHeight';
+      case 'None': return 'None';
+      case 'Scale Down': return 'Scaledown';
+      default: return 'Contain';
     }
   };
 
