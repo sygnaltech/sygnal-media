@@ -59,8 +59,18 @@ export default declareComponent(Rive, {
             defaultValue: true,
             group: "Behavior"
         }),
-        // Touch scroll boolean - Enable scrolling on touch devices when interacting with the canvas. Disable to prevent scroll behavior during touch/drag actions. 
-        // Automatically handle events - Automatically handle Rive events during runtime, like opening a URL when triggered by the animation.
+        touchScrollBehavior: props.Boolean({
+            name: "Touch Scroll Behavior",
+            tooltip: "Enable scrolling on touch devices when interacting with the canvas. Disable to prevent scroll behavior during touch/drag actions.",
+            defaultValue: true,
+            group: "Behavior",
+        }),
+        automaticallyHandleEvents: props.Boolean({
+            name: "Automatically Handle Events",
+            tooltip: "Automatically handle Rive events during runtime, like opening a URL when triggered by the animation.",
+            defaultValue: false,
+            group: "Behavior",
+        }),
         lazy: props.Boolean({
             name: "Lazy Load",
             tooltip: "Load the animation only when needed",

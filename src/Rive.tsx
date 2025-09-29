@@ -16,6 +16,8 @@ export interface RiveProps {
   stateMachine?: string;
   artboard?: string;
   fit?: 'Contain' | 'Cover' | 'Fill' | 'Fit Width' | 'Fit Height' | 'None' | 'Scale Down';
+  touchScrollBehavior?: boolean;
+  automaticallyHandleEvents?: boolean;
 }
 
 export const Rive: React.FC<RiveProps> = ({
@@ -31,6 +33,9 @@ export const Rive: React.FC<RiveProps> = ({
   stateMachine,
   artboard,
   fit = 'Contain',
+  touchScrollBehavior = true,
+  automaticallyHandleEvents = true,
+  lazy = false,
   onLoad,
   onError,
 }) => {
@@ -77,7 +82,9 @@ export const Rive: React.FC<RiveProps> = ({
       autoplay,
       stateMachine,
       artboard,
-      fit
+      fit,
+      touchScrollBehavior,
+      automaticallyHandleEvents
     });
 
     const canvas = canvasRef.current;
@@ -120,6 +127,8 @@ export const Rive: React.FC<RiveProps> = ({
             fit: riveFitValue,
             alignment: Alignment.Center,
           }),
+          shouldDisableRiveListeners: !touchScrollBehavior,
+          automaticallyHandleEvents: automaticallyHandleEvents,
           onLoad: () => {
             console.log('Rive animation loaded successfully');
             if (onLoad) onLoad();
@@ -182,7 +191,7 @@ export const Rive: React.FC<RiveProps> = ({
         riveInstanceRef.current = null;
       }
     };
-  }, [urlString, autoplay, stateMachine, artboard, fit, onLoad, onError]);
+  }, [urlString, autoplay, stateMachine, artboard, fit, touchScrollBehavior, automaticallyHandleEvents, onLoad, onError]);
 
   const containerStyle: CSSProperties = {
     width,
