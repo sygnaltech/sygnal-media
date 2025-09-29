@@ -1,4 +1,4 @@
-import { Spline } from './SplineSimple';
+import { Spline } from './Spline';
 import { props } from '@webflow/data-types';
 import { declareComponent } from '@webflow/react';
 
