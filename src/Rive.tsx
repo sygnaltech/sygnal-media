@@ -15,6 +15,7 @@ export interface RiveProps {
   autoplay?: boolean;
   stateMachine?: string;
   artboard?: string;
+  fit?: 'Contain' | 'Cover' | 'Fill' | 'Fit Width' | 'Fit Height' | 'None' | 'Scale Down';
 }
 
 export const Rive: React.FC<RiveProps> = ({
@@ -29,6 +30,7 @@ export const Rive: React.FC<RiveProps> = ({
   autoplay = true,
   stateMachine,
   artboard,
+  fit = 'Contain',
   onLoad,
   onError,
 }) => {
@@ -48,6 +50,20 @@ export const Rive: React.FC<RiveProps> = ({
 
   const urlString = getUrlString(riveUrl);
 
+  // Map Webflow variant values to Rive fit values
+  const getRiveFitValue = (webflowFit: string) => {
+    switch (webflowFit) {
+      case 'Contain': return 'contain';
+      case 'Cover': return 'cover';
+      case 'Fill': return 'fill';
+      case 'Fit Width': return 'fitWidth';
+      case 'Fit Height': return 'fitHeight';
+      case 'None': return 'none';
+      case 'Scale Down': return 'scaleDown';
+      default: return 'contain';
+    }
+  };
+
   useEffect(() => {
     console.log('Rive component mounted with props:', {
       riveUrl,
@@ -58,7 +74,8 @@ export const Rive: React.FC<RiveProps> = ({
       responsive,
       autoplay,
       stateMachine,
-      artboard
+      artboard,
+      fit
     });
 
     const canvas = canvasRef.current;
@@ -78,6 +95,7 @@ export const Rive: React.FC<RiveProps> = ({
           autoplay: autoplay,
           stateMachines: stateMachine ? [stateMachine] : undefined,
           artboard: artboard,
+          fit: getRiveFitValue(fit),
           onLoad: () => {
             console.log('Rive animation loaded successfully');
             if (onLoad) onLoad();
@@ -131,7 +149,7 @@ export const Rive: React.FC<RiveProps> = ({
         riveInstanceRef.current = null;
       }
     };
-  }, [urlString, autoplay, stateMachine, artboard, onLoad, onError]);
+  }, [urlString, autoplay, stateMachine, artboard, fit, onLoad, onError]);
 
   const containerStyle: CSSProperties = {
     width,
