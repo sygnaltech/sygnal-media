@@ -1,4 +1,4 @@
-import { Spline } from './Spline';
+import { Spline } from './SplineSimple';
 import { props } from '@webflow/data-types';
 import { declareComponent } from '@webflow/react';
 
@@ -26,11 +26,6 @@ export default declareComponent(Spline, {
         responsive: props.Boolean({
             name: "Responsive",
             description: "Enable responsive behavior",
-            defaultValue: true,
-        }),
-        allowFullscreen: props.Boolean({
-            name: "Allow Fullscreen",
-            description: "Allow fullscreen mode for the Spline scene",
             defaultValue: true,
         }),
         lazy: props.Boolean({

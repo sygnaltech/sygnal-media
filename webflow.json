@@ -1,11 +1,11 @@
 {
   "library": {
-    "name": "Sygnal Media v0.1.0",
+    "name": "Sygnal Media Test v0.1.0",
     "components": [
       "./src/**/*.webflow.@(js|jsx|mjs|ts|tsx)"
     ],
     "description": "Sygnal Media",
-    "id": "sygnal-media"
+    "id": "sygnal-media-test"
   },
   "telemetry": {
     "global": {
