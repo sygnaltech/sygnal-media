@@ -50,17 +50,18 @@ export const Rive: React.FC<RiveProps> = ({
 
   const urlString = getUrlString(riveUrl);
 
-  // Map Webflow variant values to Rive fit values
+  // Map Webflow variant values to Rive.Fit enum values
   const getRiveFitValue = (webflowFit: string) => {
+    // We'll get the Rive module dynamically, so return string values for now
     switch (webflowFit) {
-      case 'Contain': return 'contain';
-      case 'Cover': return 'cover';
-      case 'Fill': return 'fill';
-      case 'Fit Width': return 'fitWidth';
-      case 'Fit Height': return 'fitHeight';
-      case 'None': return 'none';
-      case 'Scale Down': return 'scaleDown';
-      default: return 'contain';
+      case 'Contain': return 'CONTAIN';
+      case 'Cover': return 'COVER';
+      case 'Fill': return 'FILL';
+      case 'Fit Width': return 'FIT_WIDTH';
+      case 'Fit Height': return 'FIT_HEIGHT';
+      case 'None': return 'NONE';
+      case 'Scale Down': return 'SCALE_DOWN';
+      default: return 'CONTAIN';
     }
   };
 
@@ -81,13 +82,32 @@ export const Rive: React.FC<RiveProps> = ({
     const canvas = canvasRef.current;
     if (!canvas || !urlString) return;
 
+    // Canvas resizing function for crisp rendering
+    const resizeCanvas = () => {
+      const dpr = window.devicePixelRatio || 1;
+      const { width, height } = canvas.getBoundingClientRect();
+      canvas.width = Math.round(width * dpr);
+      canvas.height = Math.round(height * dpr);
+    };
+
     // Load Rive runtime and animation
     const loadRive = async () => {
       try {
         // Dynamically import Rive runtime
-        const { Rive: RiveRuntime } = await import('@rive-app/canvas');
+        const RiveModule = await import('@rive-app/canvas');
+        const { Rive: RiveRuntime, Layout, Fit, Alignment } = RiveModule;
 
         console.log('Loading Rive animation:', urlString);
+
+        // Initial canvas resize
+        resizeCanvas();
+
+        // Set up ResizeObserver for responsive canvas sizing
+        const resizeObserver = new ResizeObserver(resizeCanvas);
+        resizeObserver.observe(canvas);
+
+        // Get the appropriate Rive.Fit enum value
+        const riveFitValue = Fit[getRiveFitValue(fit) as keyof typeof Fit];
 
         const riveInstance = new RiveRuntime({
           src: urlString,
@@ -95,20 +115,26 @@ export const Rive: React.FC<RiveProps> = ({
           autoplay: autoplay,
           stateMachines: stateMachine ? [stateMachine] : undefined,
           artboard: artboard,
-          fit: getRiveFitValue(fit),
+          layout: new Layout({
+            fit: riveFitValue,
+            alignment: Alignment.Center,
+          }),
           onLoad: () => {
             console.log('Rive animation loaded successfully');
-            // Fix blurriness on high-DPI displays by adjusting canvas resolution
-            riveInstance.resizeDrawingSurfaceToCanvas();
             if (onLoad) onLoad();
           },
-          onLoadError: (error: Error) => {
-            console.error('Failed to load Rive animation:', error);
+          onLoadError: (event: any) => {
+            console.error('Failed to load Rive animation:', event);
+            // Convert event to Error for our callback
+            const error = new Error(`Failed to load Rive animation: ${event?.type || 'unknown error'}`);
             if (onError) onError(error);
           },
         });
 
         riveInstanceRef.current = riveInstance;
+
+        // Store resize observer for cleanup
+        (riveInstance as any)._resizeObserver = resizeObserver;
 
       } catch (error) {
         console.error('Failed to load Rive runtime:', error);
@@ -147,6 +173,10 @@ export const Rive: React.FC<RiveProps> = ({
     return () => {
       console.log('Rive component unmounting');
       if (riveInstanceRef.current) {
+        // Clean up resize observer
+        if ((riveInstanceRef.current as any)._resizeObserver) {
+          (riveInstanceRef.current as any)._resizeObserver.disconnect();
+        }
         riveInstanceRef.current.cleanup();
         riveInstanceRef.current = null;
       }
