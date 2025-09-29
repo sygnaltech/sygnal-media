@@ -2,6 +2,8 @@ import { Spline } from './SplineSimple';
 import { props } from '@webflow/data-types';
 import { declareComponent } from '@webflow/react';
 
+console.log('Spline.webflow.tsx: Declaring Spline component for Webflow');
+
 export default declareComponent(Spline, {
     name: 'Spline',
     description: 'Interactive 3D Spline scene viewer',

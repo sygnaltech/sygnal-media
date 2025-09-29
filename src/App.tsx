@@ -168,7 +168,7 @@ function App() {
 
       {/* Spline 3D Scene Test */}
       <div style={{ margin: '20px 0' }}>
-        <h2>3D Spline Scene</h2>
+        <h2>3D Spline Scene1</h2>
         <Spline
           splineUrl="https://prod.spline.design/yVDxdZWJmBEGK11j/scene.splinecode"
           width="100%"
