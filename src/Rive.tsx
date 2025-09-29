@@ -16,6 +16,7 @@ export interface RiveProps {
   stateMachine?: string;
   artboard?: string;
   fit?: 'Contain' | 'Cover' | 'Fill' | 'Fit Width' | 'Fit Height' | 'None' | 'Scale Down';
+  align?: 'Center' | 'Top Center' | 'Top Right' | 'Center Left' | 'Center Right' | 'Bottom Left' | 'Bottom Center' | 'Bottom Right';
   touchScrollBehavior?: boolean;
   automaticallyHandleEvents?: boolean;
 }
@@ -33,6 +34,7 @@ export const Rive: React.FC<RiveProps> = ({
   stateMachine,
   artboard,
   fit = 'Contain',
+  align = 'Center',
   touchScrollBehavior = true,
   automaticallyHandleEvents = true,
   lazy = false,
@@ -71,6 +73,21 @@ export const Rive: React.FC<RiveProps> = ({
     }
   };
 
+  // Map Webflow alignment values to Rive.Alignment enum values
+  const getRiveAlignmentValue = (webflowAlign: string) => {
+    switch (webflowAlign) {
+      case 'Center': return 'Center';
+      case 'Top Center': return 'TopCenter';
+      case 'Top Right': return 'TopRight';
+      case 'Center Left': return 'CenterLeft';
+      case 'Center Right': return 'CenterRight';
+      case 'Bottom Left': return 'BottomLeft';
+      case 'Bottom Center': return 'BottomCenter';
+      case 'Bottom Right': return 'BottomRight';
+      default: return 'Center';
+    }
+  };
+
   useEffect(() => {
     console.log('Rive component mounted with props:', {
       riveUrl,
@@ -83,6 +100,7 @@ export const Rive: React.FC<RiveProps> = ({
       stateMachine,
       artboard,
       fit,
+      align,
       touchScrollBehavior,
       automaticallyHandleEvents
     });
@@ -114,8 +132,9 @@ export const Rive: React.FC<RiveProps> = ({
         const resizeObserver = new ResizeObserver(resizeCanvas);
         resizeObserver.observe(canvas);
 
-        // Get the appropriate Rive.Fit enum value
+        // Get the appropriate Rive.Fit and Alignment enum values
         const riveFitValue = Fit[getRiveFitValue(fit) as keyof typeof Fit];
+        const riveAlignmentValue = Alignment[getRiveAlignmentValue(align) as keyof typeof Alignment];
 
         const riveInstance = new RiveRuntime({
           src: urlString,
@@ -125,7 +144,7 @@ export const Rive: React.FC<RiveProps> = ({
           artboard: artboard,
           layout: new Layout({
             fit: riveFitValue,
-            alignment: Alignment.Center,
+            alignment: riveAlignmentValue,
           }),
           shouldDisableRiveListeners: !touchScrollBehavior,
           automaticallyHandleEvents: automaticallyHandleEvents,
@@ -191,7 +210,7 @@ export const Rive: React.FC<RiveProps> = ({
         riveInstanceRef.current = null;
       }
     };
-  }, [urlString, autoplay, stateMachine, artboard, fit, touchScrollBehavior, automaticallyHandleEvents, onLoad, onError]);
+  }, [urlString, autoplay, stateMachine, artboard, fit, align, touchScrollBehavior, automaticallyHandleEvents, onLoad, onError]);
 
   const containerStyle: CSSProperties = {
     width,

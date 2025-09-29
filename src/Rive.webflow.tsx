@@ -32,8 +32,13 @@ export default declareComponent(Rive, {
             defaultValue: "Contain",
             group: "Layout",
         }),
-        // Align
-        // Center, Top center, Top right, Center left, Center right, Bottom left, Bottom center, Bottom right 
+        align: props.Variant({
+            name: "Align",
+            tooltip: "How the animation content should be aligned within its container",
+            options: ["Center", "Top Center", "Top Right", "Center Left", "Center Right", "Bottom Left", "Bottom Center", "Bottom Right"],
+            defaultValue: "Center",
+            group: "Layout",
+        }),
         width: props.Text({
             name: "Width",
             tooltip: "Width of the Rive container",
