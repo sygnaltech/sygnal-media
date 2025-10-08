@@ -7,11 +7,11 @@ export default declareComponent(BackgroundVideo, {
   description: 'A background video component with optional controls and fallback poster image',
   group: 'Media',
   props: {
-    videoUrlMp4: props.Link({
+    videoUrlMp4: props.Text({
       name: 'Video URL (MP4)',
       tooltip: 'URL to the MP4 video file',
     }),
-    videoUrlWebm: props.Link({
+    videoUrlWebm: props.Text({
       name: 'Video URL (WEBM)',
       tooltip: 'URL to the WEBM video file (optional, for better browser support)',
     }),
