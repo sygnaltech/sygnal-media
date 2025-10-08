@@ -32,5 +32,13 @@ export default declareComponent(BackgroundVideo, {
       falseLabel: 'Hide',
       tooltip: 'Show play/pause control button',
     }),
+    debug: props.Boolean({
+      name: 'Debug',
+      defaultValue: false,
+      trueLabel: 'Debug On',
+      falseLabel: 'Debug Off',
+      group: 'Advanced',
+      tooltip: 'Enable to generate console log messages',
+    }),
   },
 });

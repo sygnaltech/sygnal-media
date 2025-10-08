@@ -10,6 +10,7 @@ export interface BackgroundVideoProps {
   };
   aspectRatio?: string;
   showControls?: boolean;
+  debug?: boolean;
 }
 
 export const BackgroundVideo: React.FC<BackgroundVideoProps> = ({
@@ -18,6 +19,7 @@ export const BackgroundVideo: React.FC<BackgroundVideoProps> = ({
   posterImage,
   aspectRatio = 'Auto',
   showControls = false,
+  debug = false,
 }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isPlaying, setIsPlaying] = useState(true);
@@ -26,33 +28,88 @@ export const BackgroundVideo: React.FC<BackgroundVideoProps> = ({
 
   useEffect(() => {
     const video = videoRef.current;
-    if (!video) return;
+    if (!video) {
+      if (debug) console.log('[BackgroundVideo] No video element ref');
+      return;
+    }
+
+    if (debug) {
+      console.log('[BackgroundVideo] Component mounted', {
+        videoUrlMp4,
+        videoUrlWebm,
+        posterImage: posterImage?.src,
+        aspectRatio,
+        showControls,
+        readyState: video.readyState,
+      });
+    }
 
     const handleMetadata = () => {
+      if (debug) {
+        console.log('[BackgroundVideo] Metadata loaded event fired', {
+          videoWidth: video.videoWidth,
+          videoHeight: video.videoHeight,
+          aspectRatioSetting: aspectRatio,
+          readyState: video.readyState,
+        });
+      }
+
       if (aspectRatio === 'Auto' && video.videoWidth && video.videoHeight) {
-        setAutoAspectRatio(`${video.videoWidth} / ${video.videoHeight}`);
+        const calculatedRatio = `${video.videoWidth} / ${video.videoHeight}`;
+        setAutoAspectRatio(calculatedRatio);
+        if (debug) {
+          console.log('[BackgroundVideo] Auto aspect ratio calculated:', calculatedRatio);
+        }
       }
     };
 
+    const handleCanPlay = () => {
+      if (debug) {
+        console.log('[BackgroundVideo] Can play event fired', {
+          videoWidth: video.videoWidth,
+          videoHeight: video.videoHeight,
+        });
+      }
+    };
+
+    // Check if metadata is already loaded
+    if (video.readyState >= 1) {
+      if (debug) {
+        console.log('[BackgroundVideo] Metadata already loaded (readyState >= 1)', {
+          videoWidth: video.videoWidth,
+          videoHeight: video.videoHeight,
+          readyState: video.readyState,
+        });
+      }
+      handleMetadata();
+    }
+
     video.addEventListener('loadedmetadata', handleMetadata);
+    video.addEventListener('canplay', handleCanPlay);
 
     // Auto-play on mount
-    video.play().catch(() => {
+    video.play().catch((error) => {
       // Autoplay was prevented
       setIsPlaying(false);
+      if (debug) {
+        console.log('[BackgroundVideo] Autoplay prevented:', error);
+      }
     });
 
     return () => {
       video.removeEventListener('loadedmetadata', handleMetadata);
+      video.removeEventListener('canplay', handleCanPlay);
     };
-  }, [aspectRatio]);
+  }, [aspectRatio, videoUrlMp4, videoUrlWebm, posterImage, showControls, debug]);
 
   const togglePlayPause = () => {
     if (videoRef.current) {
       if (isPlaying) {
         videoRef.current.pause();
+        if (debug) console.log('[BackgroundVideo] Video paused');
       } else {
         videoRef.current.play();
+        if (debug) console.log('[BackgroundVideo] Video playing');
       }
       setIsPlaying(!isPlaying);
     }
@@ -64,13 +121,28 @@ export const BackgroundVideo: React.FC<BackgroundVideoProps> = ({
   // Convert aspect ratio string to CSS value
   const getAspectRatioStyle = () => {
     if (aspectRatio === 'Auto') {
+      if (debug) {
+        console.log('[BackgroundVideo] Using Auto aspect ratio:', autoAspectRatio || 'not yet calculated');
+      }
       return autoAspectRatio;
     }
     // Convert "16:9" format to "16 / 9" for CSS
-    return aspectRatio?.replace(':', ' / ');
+    const converted = aspectRatio?.replace(':', ' / ');
+    if (debug) {
+      console.log('[BackgroundVideo] Using fixed aspect ratio:', converted);
+    }
+    return converted;
   };
 
   const aspectRatioValue = getAspectRatioStyle();
+
+  if (debug) {
+    console.log('[BackgroundVideo] Render', {
+      aspectRatioValue,
+      autoAspectRatio,
+      isPlaying,
+    });
+  }
 
   return (
     <div
@@ -89,6 +161,7 @@ export const BackgroundVideo: React.FC<BackgroundVideoProps> = ({
         loop
         muted
         playsInline
+        preload="metadata"
         data-wf-ignore="true"
         data-object-fit="cover"
         style={posterSrc ? { backgroundImage: `url('${posterSrc}')` } : undefined}
