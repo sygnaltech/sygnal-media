@@ -4,7 +4,10 @@ import './BackgroundVideo.css';
 export interface BackgroundVideoProps {
   videoUrlMp4?: string;
   videoUrlWebm?: string;
-  posterImage?: string;
+  posterImage?: {
+    src: string;
+    alt?: string;
+  };
   showControls?: boolean;
 }
 
@@ -40,10 +43,11 @@ export const BackgroundVideo: React.FC<BackgroundVideoProps> = ({
   };
 
   const videoUrls = [videoUrlMp4, videoUrlWebm].filter(Boolean).join(',');
+  const posterSrc = posterImage?.src;
 
   return (
     <div
-      data-poster-url={posterImage || ''}
+      data-poster-url={posterSrc || ''}
       data-video-urls={videoUrls}
       data-autoplay="true"
       data-loop="true"
@@ -59,7 +63,7 @@ export const BackgroundVideo: React.FC<BackgroundVideoProps> = ({
         playsInline
         data-wf-ignore="true"
         data-object-fit="cover"
-        style={posterImage ? { backgroundImage: `url('${posterImage}')` } : undefined}
+        style={posterSrc ? { backgroundImage: `url('${posterSrc}')` } : undefined}
       >
         {videoUrlMp4 && (
           <source src={videoUrlMp4} type="video/mp4" data-wf-ignore="true" />
@@ -87,11 +91,11 @@ export const BackgroundVideo: React.FC<BackgroundVideoProps> = ({
             }
           `}
         </style>
-        {posterImage && (
+        {posterSrc && (
           <img
             data-wf-bgvideo-fallback-img="true"
-            src={posterImage}
-            alt=""
+            src={posterSrc}
+            alt={posterImage?.alt || ''}
           />
         )}
       </noscript>
