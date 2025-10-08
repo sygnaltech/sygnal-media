@@ -19,6 +19,12 @@ export default declareComponent(BackgroundVideo, {
       name: 'Poster Image',
       tooltip: 'Fallback poster image shown before video loads and for reduced motion',
     }),
+    aspectRatio: props.Variant({
+      name: 'Aspect Ratio',
+      options: ['Auto', '16:9', '4:3', '21:9', '1:1', '9:16'],
+      defaultValue: 'Auto',
+      tooltip: 'Container aspect ratio. Auto uses the video\'s natural aspect ratio.',
+    }),
     showControls: props.Boolean({
       name: 'Show Controls',
       defaultValue: false,

@@ -1,12 +1,11 @@
-.w-background-video {
+.background-video {
   position: relative;
   overflow: hidden;
-  height: 100%;
   width: 100%;
   min-height: 300px;
 }
 
-.w-background-video video {
+.background-video video {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -18,7 +17,7 @@
   background-position: 50% 50%;
 }
 
-.w-background-video--control {
+.background-video--control {
   position: absolute;
   bottom: 1rem;
   right: 1rem;
@@ -36,16 +35,16 @@
   z-index: 1;
 }
 
-.w-background-video--control:hover {
+.background-video--control:hover {
   background-color: rgba(0, 0, 0, 0.7);
 }
 
-.w-background-video--control img {
+.background-video--control img {
   width: 1.5rem;
   height: 1.5rem;
 }
 
-.w-background-video--control span {
+.background-video--control span {
   display: flex;
   align-items: center;
   justify-content: center;

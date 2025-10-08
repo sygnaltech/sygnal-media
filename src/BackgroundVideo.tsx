@@ -8,6 +8,7 @@ export interface BackgroundVideoProps {
     src: string;
     alt?: string;
   };
+  aspectRatio?: string;
   showControls?: boolean;
 }
 
@@ -15,21 +16,36 @@ export const BackgroundVideo: React.FC<BackgroundVideoProps> = ({
   videoUrlMp4,
   videoUrlWebm,
   posterImage,
+  aspectRatio = 'Auto',
   showControls = false,
 }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isPlaying, setIsPlaying] = useState(true);
+  const [autoAspectRatio, setAutoAspectRatio] = useState<string | undefined>();
   const videoId = useRef(`bg-video-${Math.random().toString(36).substr(2, 9)}`);
 
   useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    const handleMetadata = () => {
+      if (aspectRatio === 'Auto' && video.videoWidth && video.videoHeight) {
+        setAutoAspectRatio(`${video.videoWidth} / ${video.videoHeight}`);
+      }
+    };
+
+    video.addEventListener('loadedmetadata', handleMetadata);
+
     // Auto-play on mount
-    if (videoRef.current) {
-      videoRef.current.play().catch(() => {
-        // Autoplay was prevented
-        setIsPlaying(false);
-      });
-    }
-  }, []);
+    video.play().catch(() => {
+      // Autoplay was prevented
+      setIsPlaying(false);
+    });
+
+    return () => {
+      video.removeEventListener('loadedmetadata', handleMetadata);
+    };
+  }, [aspectRatio]);
 
   const togglePlayPause = () => {
     if (videoRef.current) {
@@ -45,6 +61,17 @@ export const BackgroundVideo: React.FC<BackgroundVideoProps> = ({
   const videoUrls = [videoUrlMp4, videoUrlWebm].filter(Boolean).join(',');
   const posterSrc = posterImage?.src;
 
+  // Convert aspect ratio string to CSS value
+  const getAspectRatioStyle = () => {
+    if (aspectRatio === 'Auto') {
+      return autoAspectRatio;
+    }
+    // Convert "16:9" format to "16 / 9" for CSS
+    return aspectRatio?.replace(':', ' / ');
+  };
+
+  const aspectRatioValue = getAspectRatioStyle();
+
   return (
     <div
       data-poster-url={posterSrc || ''}
@@ -52,7 +79,8 @@ export const BackgroundVideo: React.FC<BackgroundVideoProps> = ({
       data-autoplay="true"
       data-loop="true"
       data-wf-ignore="true"
-      className="w-background-video w-background-video-atom"
+      className="background-video"
+      style={aspectRatioValue ? { aspectRatio: aspectRatioValue } : undefined}
     >
       <video
         id={videoId.current}
@@ -106,7 +134,7 @@ export const BackgroundVideo: React.FC<BackgroundVideoProps> = ({
             type="button"
             data-w-bg-video-control="true"
             aria-controls={videoId.current}
-            className="w-backgroundvideo-backgroundvideoplaypausebutton w-background-video--control"
+            className="background-video--control"
             onClick={togglePlayPause}
           >
             <span style={{ display: isPlaying ? 'inline' : 'none' }}>
