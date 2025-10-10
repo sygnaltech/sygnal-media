@@ -25,6 +25,12 @@ export default declareComponent(BackgroundVideo, {
       defaultValue: 'Auto',
       tooltip: 'Container aspect ratio. Auto uses the video\'s natural aspect ratio.',
     }),
+    autoplayMode: props.Variant({
+      name: 'Autoplay',
+      options: ['Autoplay', 'Autoplay on Hover', 'No Autoplay'],
+      defaultValue: 'Autoplay',
+      tooltip: 'Control when the video should play',
+    }),
     showControls: props.Boolean({
       name: 'Show Controls',
       defaultValue: false,

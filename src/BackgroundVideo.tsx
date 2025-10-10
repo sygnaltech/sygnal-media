@@ -1,4 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
+import { useWebflowContext } from '@webflow/react';
 import './BackgroundVideo.css';
 
 export interface BackgroundVideoProps {
@@ -9,6 +10,7 @@ export interface BackgroundVideoProps {
     alt?: string;
   };
   aspectRatio?: string;
+  autoplayMode?: 'Autoplay' | 'Autoplay on Hover' | 'No Autoplay';
   showControls?: boolean;
   debug?: boolean;
 }
@@ -18,9 +20,11 @@ export const BackgroundVideo: React.FC<BackgroundVideoProps> = ({
   videoUrlWebm,
   posterImage,
   aspectRatio = 'Auto',
+  autoplayMode = 'Autoplay',
   showControls = false,
   debug = false,
 }) => {
+  const { interactive } = useWebflowContext();
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isPlaying, setIsPlaying] = useState(true);
   const [autoAspectRatio, setAutoAspectRatio] = useState<string | undefined>();
@@ -87,20 +91,42 @@ export const BackgroundVideo: React.FC<BackgroundVideoProps> = ({
     video.addEventListener('loadedmetadata', handleMetadata);
     video.addEventListener('canplay', handleCanPlay);
 
-    // Auto-play on mount
-    video.play().catch((error) => {
-      // Autoplay was prevented
+    // Handle autoplay based on mode (but never autoplay in design mode)
+    if (interactive && autoplayMode === 'Autoplay') {
+      video.play().catch((error) => {
+        // Autoplay was prevented
+        setIsPlaying(false);
+        if (debug) {
+          console.log('[BackgroundVideo] Autoplay prevented:', error);
+        }
+      });
+    } else if (autoplayMode === 'No Autoplay' || !interactive) {
       setIsPlaying(false);
-      if (debug) {
-        console.log('[BackgroundVideo] Autoplay prevented:', error);
-      }
-    });
+    }
 
     return () => {
       video.removeEventListener('loadedmetadata', handleMetadata);
       video.removeEventListener('canplay', handleCanPlay);
     };
-  }, [aspectRatio, videoUrlMp4, videoUrlWebm, posterImage, showControls, debug]);
+  }, [aspectRatio, videoUrlMp4, videoUrlWebm, posterImage, showControls, autoplayMode, interactive, debug]);
+
+  const handleMouseEnter = () => {
+    if (interactive && autoplayMode === 'Autoplay on Hover' && videoRef.current) {
+      videoRef.current.play().catch((error) => {
+        if (debug) {
+          console.log('[BackgroundVideo] Hover play prevented:', error);
+        }
+      });
+      setIsPlaying(true);
+    }
+  };
+
+  const handleMouseLeave = () => {
+    if (interactive && autoplayMode === 'Autoplay on Hover' && videoRef.current) {
+      videoRef.current.pause();
+      setIsPlaying(false);
+    }
+  };
 
   const togglePlayPause = () => {
     if (videoRef.current) {
@@ -148,16 +174,18 @@ export const BackgroundVideo: React.FC<BackgroundVideoProps> = ({
     <div
       data-poster-url={posterSrc || ''}
       data-video-urls={videoUrls}
-      data-autoplay="true"
+      data-autoplay={autoplayMode === 'Autoplay' ? 'true' : 'false'}
       data-loop="true"
       data-wf-ignore="true"
       className="background-video"
       style={aspectRatioValue ? { aspectRatio: aspectRatioValue } : undefined}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
     >
       <video
         id={videoId.current}
         ref={videoRef}
-        autoPlay
+        autoPlay={interactive && autoplayMode === 'Autoplay'}
         loop
         muted
         playsInline
