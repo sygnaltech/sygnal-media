@@ -45,7 +45,7 @@
     ]
   },
   "devDependencies": {
-    "@sygnal/code-component": "^0.2.0",
+    "@sygnal/code-component": "^0.3.0",
     "@vitejs/plugin-react": "^5.0.2",
     "@webflow/data-types": "^1.0.1",
     "@webflow/react": "^1.0.1",
