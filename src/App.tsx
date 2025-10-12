@@ -3,7 +3,7 @@ import './App.css';
 import { Badge } from './Badge';
 import { AudioWavesurfer } from './AudioWavesurfer';
 import { Spline } from './Spline';
-import { Rive } from './Rive'; 
+import { RiveCanvas } from './RiveCanvas'; 
 
 //import { MapPin } from './MapPin'; 
 
@@ -194,8 +194,8 @@ function App() {
 
       {/* Rive Animation Test */}
       <div style={{ margin: '20px 0' }}>
-        <h2>Rive Animation - Vehicles</h2>
-        <Rive
+        <h2>Rive Animation - Vehicles (Canvas)</h2>
+        <RiveCanvas
           riveUrl="/wf-rive-placeholder.riv"
           width="100%"
           height="400px"

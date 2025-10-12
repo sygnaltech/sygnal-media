@@ -11,6 +11,7 @@
 # production
 /build
 /dist
+/public
 
 # misc
 .DS_Store
@@ -26,6 +27,6 @@ yarn-error.log*
 .env
 .env.*
 
+# build 
 webflow.json
 
-/public
