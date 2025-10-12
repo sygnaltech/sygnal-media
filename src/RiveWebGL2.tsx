@@ -1,6 +1,6 @@
 import React, { CSSProperties, useEffect, useRef } from 'react';
 
-export interface RiveProps {
+export interface RiveWebGL2Props {
   riveUrl: string | { href: string };
   width?: number | string;
   height?: number | string;
@@ -21,7 +21,7 @@ export interface RiveProps {
   automaticallyHandleEvents?: boolean;
 }
 
-export const Rive: React.FC<RiveProps> = ({
+export const RiveWebGL2: React.FC<RiveWebGL2Props> = ({
   riveUrl,
   width = '100%',
   height = '500px',
@@ -57,8 +57,8 @@ export const Rive: React.FC<RiveProps> = ({
 
   const urlString = getUrlString(riveUrl);
 
-  // Map Webflow variant values to Rive.Fit enum values 
-  // https://rive.app/docs/runtimes/layout 
+  // Map Webflow variant values to Rive.Fit enum values
+  // https://rive.app/docs/runtimes/layout
   const getRiveFitValue = (webflowFit: string) => {
     // We'll get the Rive module dynamically, so return string values for now
     switch (webflowFit) {
@@ -89,7 +89,7 @@ export const Rive: React.FC<RiveProps> = ({
   };
 
   useEffect(() => {
-    console.log('Rive component mounted with props:', {
+    console.log('RiveWebGL2 component mounted with props:', {
       riveUrl,
       urlString,
       width,
@@ -119,11 +119,11 @@ export const Rive: React.FC<RiveProps> = ({
     // Load Rive runtime and animation
     const loadRive = async () => {
       try {
-        // Dynamically import Rive runtime
-        const RiveModule = await import('@rive-app/canvas');
+        // Dynamically import WebGL2 runtime
+        const RiveModule = await import('@rive-app/webgl2');
         const { Rive: RiveRuntime, Layout, Fit, Alignment } = RiveModule;
 
-        console.log('Loading Rive animation:', urlString);
+        console.log('Loading Rive animation with WebGL2 runtime:', urlString);
 
         // Initial canvas resize
         resizeCanvas();
@@ -149,7 +149,7 @@ export const Rive: React.FC<RiveProps> = ({
           shouldDisableRiveListeners: !touchScrollBehavior,
           automaticallyHandleEvents: automaticallyHandleEvents,
           onLoad: () => {
-            console.log('Rive animation loaded successfully');
+            console.log('Rive WebGL2 animation loaded successfully');
             if (onLoad) onLoad();
           },
           onLoadError: (event: any) => {
@@ -166,7 +166,7 @@ export const Rive: React.FC<RiveProps> = ({
         (riveInstance as any)._resizeObserver = resizeObserver;
 
       } catch (error) {
-        console.error('Failed to load Rive runtime:', error);
+        console.error('Failed to load Rive WebGL2 runtime:', error);
 
         // Fallback to placeholder if runtime fails
         const fallbackDiv = document.createElement('div');
@@ -184,8 +184,9 @@ export const Rive: React.FC<RiveProps> = ({
 
         const animationName = urlString.split('/').pop()?.replace(/\.[^/.]+$/, '') || 'animation';
         fallbackDiv.innerHTML = `
-          Rive Runtime Unavailable<br>
-          <small>${animationName}</small>
+          Rive WebGL2 Runtime Unavailable<br>
+          <small>${animationName}</small><br>
+          <small style="margin-top: 8px; display: block; font-size: 12px;">WebGL2 may not be supported in this browser</small>
         `;
 
         if (canvas.parentElement) {
@@ -200,7 +201,7 @@ export const Rive: React.FC<RiveProps> = ({
     loadRive();
 
     return () => {
-      console.log('Rive component unmounting');
+      console.log('RiveWebGL2 component unmounting');
       if (riveInstanceRef.current) {
         // Clean up resize observer
         if ((riveInstanceRef.current as any)._resizeObserver) {
@@ -226,15 +227,15 @@ export const Rive: React.FC<RiveProps> = ({
     ...style,
   };
 
-  const animationId = urlString.split('/').pop()?.replace(/\.[^/.]+$/, '') || 'rive';
+  const animationId = urlString.split('/').pop()?.replace(/\.[^/.]+$/, '') || 'rive-webgl2';
 
-  console.log('Rendering Rive component with animationId:', animationId, 'from URL:', urlString);
+  console.log('Rendering RiveWebGL2 component with animationId:', animationId, 'from URL:', urlString);
 
   return (
     <div className={className} style={containerStyle}>
       <canvas
         ref={canvasRef}
-        id={`rive-canvas-${animationId}`}
+        id={`rive-webgl2-${animationId}`}
         style={{
           width: '100%',
           height: '100%',
@@ -245,4 +246,4 @@ export const Rive: React.FC<RiveProps> = ({
   );
 };
 
-export default Rive;
+export default RiveWebGL2;

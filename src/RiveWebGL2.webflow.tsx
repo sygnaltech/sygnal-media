@@ -1,12 +1,12 @@
-import { Rive } from './Rive';
+import { RiveWebGL2 } from './RiveWebGL2';
 import { props } from '@webflow/data-types';
 import { declareComponent } from '@webflow/react';
 
-console.log('Rive.webflow.tsx: Declaring Rive component for Webflow');
+console.log('RiveWebGL2.webflow.tsx: Declaring RiveWebGL2 component for Webflow');
 
-export default declareComponent(Rive, {
-    name: 'Rive',
-    description: 'Interactive Rive animation player',
+export default declareComponent(RiveWebGL2, {
+    name: 'Rive WebGL2',
+    description: 'Interactive Rive animation player using WebGL2 renderer (supports vector feathering, requires WebGL2)',
     group: 'Media',
     props: {
         riveUrl: props.Link({
