@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 
-export interface WebRotate360Props {
+export interface Rotate360Props {
   jsonUrl: string;
   rotationDirection?: 'clockwise' | 'counterclockwise';
   className?: string;
@@ -11,7 +11,7 @@ interface RotationData {
   images: string[];
 }
 
-export const WebRotate360: React.FC<WebRotate360Props> = ({
+export const Rotate360: React.FC<Rotate360Props> = ({
   jsonUrl,
   rotationDirection = 'clockwise',
   className = '',
@@ -105,7 +105,25 @@ export const WebRotate360: React.FC<WebRotate360Props> = ({
         if (!data.images || !Array.isArray(data.images) || data.images.length === 0) {
           throw new Error('Invalid JSON format: must contain an "images" array');
         }
-        setImages(data.images);
+
+        // Extract base path from JSON URL for relative image paths
+        const jsonUrlObj = new URL(jsonUrl, window.location.href);
+        const basePath = jsonUrlObj.href.substring(0, jsonUrlObj.href.lastIndexOf('/') + 1);
+
+        // Process images: make relative paths absolute based on JSON file location
+        const processedImages = data.images.map(imagePath => {
+          // Check if the image path already has an origin (protocol + domain)
+          try {
+            const imageUrl = new URL(imagePath);
+            // If it has a protocol, it's already absolute
+            return imagePath;
+          } catch {
+            // No protocol means it's relative - make it relative to JSON file location
+            return new URL(imagePath, basePath).href;
+          }
+        });
+
+        setImages(processedImages);
         setLoading(false);
       })
       .catch(err => {
@@ -347,4 +365,4 @@ export const WebRotate360: React.FC<WebRotate360Props> = ({
   );
 };
 
-export default WebRotate360;
+export default Rotate360;

@@ -1,17 +1,17 @@
 import { declareComponent } from '@webflow/react';
-import { WebRotate360 } from './WebRotate360';
+import { Rotate360 } from './Rotate360';
 import { props } from '@webflow/data-types';
 import React from 'react';
 
 // Wrapper component to convert Link and boolean props for the main component
-const WebRotate360Wrapper: React.FC<{
+const Rotate360Wrapper: React.FC<{
   jsonUrl: { href: string };
   rotationDirection?: boolean;
   className?: string;
   style?: React.CSSProperties;
 }> = ({ jsonUrl, rotationDirection = true, className, style }) => {
   return (
-    <WebRotate360
+    <Rotate360
       jsonUrl={jsonUrl.href}
       rotationDirection={rotationDirection ? 'clockwise' : 'counterclockwise'}
       className={className}
@@ -20,8 +20,8 @@ const WebRotate360Wrapper: React.FC<{
   );
 };
 
-export default declareComponent(WebRotate360Wrapper, {
-  name: 'Web Rotate 360',
+export default declareComponent(Rotate360Wrapper, {
+  name: 'Rotate 360',
   description: 'Display high-resolution 360° rotatable product images with mouse/touch drag interaction',
   group: 'Media',
   props: {
