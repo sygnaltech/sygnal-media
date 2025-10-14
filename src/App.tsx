@@ -4,6 +4,7 @@ import { Badge } from './Badge';
 import { AudioWavesurfer } from './AudioWavesurfer';
 import { Spline } from './Spline';
 import { RiveCanvas } from './RiveCanvas'; 
+import { WebRotate360 } from './WebRotate360';
 
 //import { MapPin } from './MapPin'; 
 
@@ -205,6 +206,45 @@ function App() {
           onError={(error) => console.error('Rive error:', error)}
         />
       </div>
+
+
+
+
+<div style={{ padding: '40px', maxWidth: '800px', margin: '0 auto' }}>
+  <h1>WebRotate360 Component Demo</h1>
+  <p style={{ marginBottom: '20px', color: '#666' }}>
+    Drag left or right to rotate the 360° view
+  </p>
+
+  <h3>Clockwise Rotation (default):</h3>
+  <WebRotate360
+    jsonUrl="/demo-rotation.json"
+    rotationDirection="clockwise"
+  />
+
+  <h3 style={{ marginTop: '40px' }}>Counterclockwise Rotation:</h3>
+  <WebRotate360
+    jsonUrl="/demo-rotation.json"
+    rotationDirection="counterclockwise"
+  />
+
+  <div style={{ marginTop: '20px', padding: '20px', backgroundColor: '#f5f5f5', borderRadius: '8px' }}>
+    <h3>How it works:</h3>
+    <ul style={{ lineHeight: '1.8' }}>
+      <li>Click and drag (or swipe on mobile) to rotate</li>
+      <li>The component loads 36 images (10° between each frame)</li>
+      <li>Seamlessly wraps from 360° back to 0°</li>
+      <li>Shows current angle and frame number at the bottom</li>
+      <li>Toggle between clockwise and counterclockwise rotation directions</li>
+    </ul>
+  </div>
+</div>
+
+
+
+
+
+
 
     </div>
   );
