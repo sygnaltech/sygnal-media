@@ -6,14 +6,14 @@ import React from 'react';
 // Wrapper component to convert Link and boolean props for the main component
 const FlipbookWrapper: React.FC<{
   jsonUrl: { href: string };
-  rotationDirection?: boolean;
+  direction?: boolean;
   className?: string;
   style?: React.CSSProperties;
-}> = ({ jsonUrl, rotationDirection = true, className, style }) => {
+}> = ({ jsonUrl, direction = true, className, style }) => {
   return (
     <Flipbook
       jsonUrl={jsonUrl.href}
-      rotationDirection={rotationDirection ? 'clockwise' : 'counterclockwise'}
+      rotationDirection={direction ? 'clockwise' : 'counterclockwise'}
       className={className}
       style={style}
     />
@@ -29,13 +29,12 @@ export default declareComponent(FlipbookWrapper, {
       name: 'JSON File',
       tooltip: 'URL to JSON file containing array of image URLs for 360A� rotation sequence (0A� to 360A�)'
     }),
-    rotationDirection: props.Boolean({
-      name: 'Clockwise Rotation',
-      tooltip: 'Direction of rotation when dragging left to right',
+    direction: props.Boolean({
+      name: 'Direction',
+      tooltip: 'Forward or reverse image sequence direction when dragging',
       defaultValue: true,
-      trueLabel: 'Clockwise',
-      falseLabel: 'Counterclockwise'
+      trueLabel: 'Forward',
+      falseLabel: 'Reverse'
     })
   }
 });
-

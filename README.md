@@ -134,7 +134,7 @@ Files:
 
 Props (Webflow):
 - `jsonUrl` (Link) — URL to a JSON file with an `images` array
-- `rotationDirection` (Boolean) — Clockwise (true) or Counterclockwise (false)
+- `direction` (Boolean) — Forward (true) or Backward (false)
 
 JSON format:
 ```json
