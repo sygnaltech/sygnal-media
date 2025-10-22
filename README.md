@@ -1,70 +1,170 @@
-# Sygnal Media
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Sygnal Media — Webflow Code Components
 
-## Available Scripts
+A set of Webflow Code Components focused on media: background video, audio players, 3D scenes, Rive animations, and 360° product rotation.
 
-In the project directory, you can run:
+- Component gallery and docs: https://components.sygnal.com/sygnal-webflow-components/cc/sygnal-media
+- Package docs root: https://components.sygnal.com/sygnal-webflow-components
 
-### `npm start`
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Components
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### Background Video
+Full‑bleed background video with optional controls, multiple sources, poster fallback, and reduced‑motion handling.
 
-### `npm test`
+Files:
+- `src/BackgroundVideo.tsx:1` main component
+- `src/BackgroundVideo.webflow.tsx:1` Webflow wrapper/props
+- `src/BackgroundVideo.css:1` styles
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Props (Webflow):
+- `videoUrlMp4` (Text) — MP4 source URL
+- `videoUrlWebm` (Text) — WEBM source URL (optional)
+- `posterImage` (Image) — fallback poster image
+- `aspectRatio` (Variant) — Auto | 16:9 | 4:3 | 21:9 | 1:1 | 9:16
+- `autoplayMode` (Variant) — Autoplay | Autoplay on Hover | No Autoplay
+- `showControls` (Boolean) — show/hide play/pause button
+- `debug` (Boolean, Advanced) — console logging
 
-### `npm run build`
+Features:
+- Auto aspect‑ratio detection (when set to Auto)
+- Hover‑to‑play mode and manual controls
+- Poster fallback in `<noscript>` and supports `prefers-reduced-motion`
+- Non‑interactive in Designer (no autoplay)
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+See also: `BackgroundVideo.md:1` for a deeper dive.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Audio (HTML5)
+Simple HTML5 audio element with optional controls.
 
-### `npm run eject`
+Files:
+- `src/Audio.tsx:1` main component
+- `src/Audio.webflow.tsx:1` Webflow wrapper/props
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+Props (Webflow):
+- `mp3` (Link) — asset or external MP3
+- `loop` (Boolean) — loop playback
+- `preload` (Boolean) — Auto (true) or Off (false)
+- `controls` (Boolean) — show native controls
+- `id` (Id, Advanced) — optional identifier for external scripting
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+### Audio (Wavesurfer)
+Waveform audio player built on Wavesurfer.js with play/pause UI, hover preview, time/duration, and theming via CSS variables.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+Files:
+- `src/AudioWavesurfer.tsx:1` main component
+- `src/AudioWavesurfer.webflow.tsx:1` Webflow wrapper/props
+- `src/AudioWavesurfer.css:1` styles and theme variables
 
-## Learn More
+Props (Webflow):
+- `mp3` (Link) — asset or external MP3
+- `loop` (Boolean) — loop playback
+- `preload` (Boolean) — Auto (true) or Off (false)
+- `id` (Id, Advanced) — optional unique player ID for external control
+- `namespace` (Id, Advanced) — optional namespace for ID scoping
+- `debug` (Boolean, Advanced) — console logging
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Styling (CSS variables):
+- Colors — `--cc-audio-wavesurfer-top`, `--cc-audio-wavesurfer-separator`, `--cc-audio-wavesurfer-bottom`
+- Progress — `--cc-audio-wavesurfer-progress-top`, `--cc-audio-wavesurfer-progress-mid`, `--cc-audio-wavesurfer-progress-bottom`
+- UI — `--cc-audio-wavesurfer-button-size`, `--cc-audio-wavesurfer-icon`, `--cc-audio-wavesurfer-separator-pos`, `--cc-audio-wavesurfer-bar-width`, `--cc-audio-wavesurfer-min-width`
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Behavior:
+- Pauses other players on play (via MediaPlayerManager)
+- External control available when `id` is provided
 
-### Code Splitting
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+### Rive (Canvas)
+Rive animation player using the Canvas renderer (broad compatibility; no vector feathering).
 
-### Analyzing the Bundle Size
+Files:
+- `src/RiveCanvas.tsx:1` main component
+- `src/RiveCanvas.webflow.tsx:1` Webflow wrapper/props
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+Props (Webflow):
+- `riveUrl` (Link) — .riv file (asset or URL)
+- `artboard` (Text) — artboard name (optional)
+- `stateMachine` (Text) — state machine name (optional)
+- `fit` (Variant) — Contain | Cover | Fill | Fit Width | Fit Height | None | Scale Down
+- `align` (Variant) — Center | Top Center | Top Right | Center Left | Center Right | Bottom Left | Bottom Center | Bottom Right
+- `width` (Text) — container width (default 100%)
+- `height` (Text) — container height (default 500px)
+- `responsive` (Boolean) — responsive container sizing
+- `autoplay` (Boolean) — start automatically
+- `touchScrollBehavior` (Boolean) — allow page scroll while touching canvas
+- `automaticallyHandleEvents` (Boolean) — handle Rive events (e.g. open URL)
+- `lazy` (Boolean, Advanced) — lazy‑load
 
-### Making a Progressive Web App
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+### Rive (WebGL2)
+Rive animation player using the WebGL2 renderer (supports vector feathering; requires WebGL2 support).
 
-### Advanced Configuration
+Files:
+- `src/RiveWebGL2.tsx:1` main component
+- `src/RiveWebGL2.webflow.tsx:1` Webflow wrapper/props
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+Props: same as Rive (Canvas).
 
-### Deployment
+Notes:
+- Displays a friendly fallback if WebGL2 is unavailable.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
 
-### `npm run build` fails to minify
+### Spline
+Interactive 3D Spline scene viewer using `@splinetool/runtime`.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Files:
+- `src/Spline.tsx:1` main component
+- `src/Spline.webflow.tsx:1` Webflow wrapper/props
+
+Props (Webflow):
+- `splineUrl` (Link) — Spline scene URL
+- `width` (Text) — container width (default 100%)
+- `height` (Text) — container height (default 500px)
+- `responsive` (Boolean) — responsive container sizing
+- `lazy` (Boolean) — lazy‑load
+
+
+### Rotate 360
+High‑resolution, drag‑to‑rotate product viewer. Accepts a JSON file listing image URLs and supports clockwise/counterclockwise direction.
+
+Files:
+- `src/Flipbook.tsx:1` main component
+- `src/Flipbook.webflow.tsx:1` Webflow wrapper/props
+
+Props (Webflow):
+- `jsonUrl` (Link) — URL to a JSON file with an `images` array
+- `rotationDirection` (Boolean) — Clockwise (true) or Counterclockwise (false)
+
+JSON format:
+```json
+{
+  "images": [
+    "frame_0001.jpg",
+    "frame_0002.jpg"
+  ]
+}
+Features:
+
+Drag or touch to rotate; wraps 0–360° seamlessly
+Shows current angle and frame; hover overlay preview
+Preloads images; handles relative paths based on the JSON file’s location
+Error/loading states and mobile touch support
+Global JS APIs
+MediaPlayerManager (global)
+The waveform players register with a global manager for coordinated control.
+
+Global: window.mediaPlayerManager
+Source: src/MediaPlayerManager.tsx:1
+Methods:
+
+playPlayer(id: string): boolean
+pausePlayer(id: string): boolean
+pauseAll(): void
+getPlayerIds(): string[]
+Example:
+
+html
+
+<button onclick="window.mediaPlayerManager.pauseAll()">Pause All</button>
