@@ -1,10 +1,20 @@
 import logo from './logo.svg';
 import './App.css';
-import { Badge } from './Badge';
 import { AudioWavesurfer } from './AudioWavesurfer';
 import { Spline } from './Spline';
-import { RiveCanvas } from './RiveCanvas'; 
-import { WebRotate360 } from './WebRotate360';
+import { RiveCanvas } from './RiveCanvas';
+import { Flipbook } from './Flipbook';
+
+declare global {
+  interface Window {
+    mediaPlayerManager?: {
+      playPlayer: (id: string) => boolean;
+      pausePlayer: (id: string) => boolean;
+      pauseAll: () => void;
+      getPlayerIds: () => string[];
+    };
+  }
+}
 
 //import { MapPin } from './MapPin'; 
 
@@ -111,11 +121,6 @@ function App() {
       </header>
 
 
-<Badge text='Dark' variant='Dark' />
-
-<Badge text='Light' variant='Light' />
-
-
 
 
       <h1>Audio Player Test</h1>
@@ -175,8 +180,8 @@ function App() {
           splineUrl="https://prod.spline.design/yVDxdZWJmBEGK11j/scene.splinecode"
           width="100%"
           height="600px"
-          onLoad={(spline) => console.log('Spline scene loaded:', spline)}
-          onError={(error) => console.error('Spline error:', error)}
+          onLoad={() => console.log('Spline scene loaded')}
+          onError={(error: unknown) => console.error('Spline error:', error)}
         />
       </div>
 
@@ -203,7 +208,7 @@ function App() {
           artboard="Jeep"
           autoplay={true}
           onLoad={() => console.log('Rive animation loaded successfully')}
-          onError={(error) => console.error('Rive error:', error)}
+          onError={(error: unknown) => console.error('Rive error:', error)}
         />
       </div>
 
@@ -211,19 +216,19 @@ function App() {
 
 
 <div style={{ padding: '40px', maxWidth: '800px', margin: '0 auto' }}>
-  <h1>WebRotate360 Component Demo</h1>
+  <h1>Flipbook Component Demo</h1>
   <p style={{ marginBottom: '20px', color: '#666' }}>
     Drag left or right to rotate the 360° view
   </p>
 
-  <h3>Clockwise Rotation (default):</h3>
-  <WebRotate360
+  <h3>Forward Direction (default):</h3>
+  <Flipbook
     jsonUrl="/demo-rotation.json"
     rotationDirection="clockwise"
   />
 
-  <h3 style={{ marginTop: '40px' }}>Counterclockwise Rotation:</h3>
-  <WebRotate360
+  <h3 style={{ marginTop: '40px' }}>Backward Direction:</h3>
+  <Flipbook
     jsonUrl="/demo-rotation.json"
     rotationDirection="counterclockwise"
   />
