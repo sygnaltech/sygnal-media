@@ -1,4 +1,3 @@
-
 # Sygnal Media — Webflow Code Components
 
 A set of Webflow Code Components focused on media: background video, audio players, 3D scenes, Rive animations, and 360° product rotation.
@@ -126,7 +125,7 @@ Props (Webflow):
 - `lazy` (Boolean) — lazy‑load
 
 
-### Rotate 360
+### Flipbook
 High‑resolution, drag‑to‑rotate product viewer. Accepts a JSON file listing image URLs and supports clockwise/counterclockwise direction.
 
 Files:
@@ -145,26 +144,56 @@ JSON format:
     "frame_0002.jpg"
   ]
 }
-Features:
+```
 
-Drag or touch to rotate; wraps 0–360° seamlessly
-Shows current angle and frame; hover overlay preview
-Preloads images; handles relative paths based on the JSON file’s location
-Error/loading states and mobile touch support
-Global JS APIs
-MediaPlayerManager (global)
+Features:
+- Drag or touch to rotate; wraps 0–360° seamlessly
+- Shows current angle and frame; hover overlay preview
+- Preloads images; handles relative paths based on the JSON file’s location
+- Error/loading states and mobile touch support
+
+
+## Global JS APIs
+
+### MediaPlayerManager (global)
 The waveform players register with a global manager for coordinated control.
 
-Global: window.mediaPlayerManager
-Source: src/MediaPlayerManager.tsx:1
+- Global: `window.mediaPlayerManager`
+- Source: `src/MediaPlayerManager.tsx:1`
+
 Methods:
+- `playPlayer(id: string): boolean`
+- `pausePlayer(id: string): boolean`
+- `pauseAll(): void`
+- `getPlayerIds(): string[]`
 
-playPlayer(id: string): boolean
-pausePlayer(id: string): boolean
-pauseAll(): void
-getPlayerIds(): string[]
 Example:
-
-html
-
+```html
 <button onclick="window.mediaPlayerManager.pauseAll()">Pause All</button>
+```
+
+
+## Usage (Webflow)
+
+- Add the component from the “Media” group.
+- Set URLs via Link/Text props (assets or external URLs).
+- For assets hosted in Webflow, use the Asset picker in the Link prop.
+- For external control of audio players, set a unique `id` and call the global API.
+
+
+## Development
+
+Local dev and build:
+- `npm run dev` — start Vite dev server
+- `npm run build` — build
+- `npm run preview` — preview build
+- `npm run update-cli` — update Webflow CLI packages
+
+Version and docs URL constants: `src/version.ts:1`
+
+
+## Notes
+
+- Canvas vs WebGL2: WebGL2 supports vector feathering but requires browser support; Canvas is broadly compatible.
+- Background Video never autoplays in Webflow Designer (`interactive=false`) to avoid surprises while editing.
+- Flipbook processes relative image paths against the JSON file URL for portability.
