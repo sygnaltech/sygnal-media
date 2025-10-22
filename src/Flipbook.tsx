@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 
-export interface Rotate360Props {
+export interface FlipbookProps {
   jsonUrl: string;
   rotationDirection?: 'clockwise' | 'counterclockwise';
   className?: string;
@@ -11,7 +11,7 @@ interface RotationData {
   images: string[];
 }
 
-export const Rotate360: React.FC<Rotate360Props> = ({
+export const Flipbook: React.FC<FlipbookProps> = ({
   jsonUrl,
   rotationDirection = 'clockwise',
   className = '',
@@ -365,4 +365,4 @@ export const Rotate360: React.FC<Rotate360Props> = ({
   );
 };
 
-export default Rotate360;
+export default Flipbook;
