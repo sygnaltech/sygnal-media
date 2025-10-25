@@ -9,191 +9,61 @@ A set of Webflow Code Components focused on media: background video, audio playe
 ## Components
 
 ### Background Video
-Full‑bleed background video with optional controls, multiple sources, poster fallback, and reduced‑motion handling.
+Full‑bleed background video for hero sections and immersive layouts.
 
-Files:
-- `src/BackgroundVideo.tsx:1` main component
-- `src/BackgroundVideo.webflow.tsx:1` Webflow wrapper/props
-- `src/BackgroundVideo.css:1` styles
-
-Props (Webflow):
-- `videoUrlMp4` (Text) — MP4 source URL
-- `videoUrlWebm` (Text) — WEBM source URL (optional)
-- `posterImage` (Image) — fallback poster image
-- `aspectRatio` (Variant) — Auto | 16:9 | 4:3 | 21:9 | 1:1 | 9:16
-- `autoplayMode` (Variant) — Autoplay | Autoplay on Hover | No Autoplay
-- `showControls` (Boolean) — show/hide play/pause button
-- `debug` (Boolean, Advanced) — console logging
-
-Features:
-- Auto aspect‑ratio detection (when set to Auto)
-- Hover‑to‑play mode and manual controls
-- Poster fallback in `<noscript>` and supports `prefers-reduced-motion`
-- Non‑interactive in Designer (no autoplay)
-
-See also: `BackgroundVideo.md:1` for a deeper dive.
+- Optional play controls or hover‑to‑play behavior
+- Smart fitting for common aspect ratios
+- Poster image when video isn’t available
+- Respects reduced‑motion preferences
 
 
 ### Audio (HTML5)
-Simple HTML5 audio element with optional controls.
+A simple audio player for quick playback.
 
-Files:
-- `src/Audio.tsx:1` main component
-- `src/Audio.webflow.tsx:1` Webflow wrapper/props
-
-Props (Webflow):
-- `mp3` (Link) — asset or external MP3
-- `loop` (Boolean) — loop playback
-- `preload` (Boolean) — Auto (true) or Off (false)
-- `controls` (Boolean) — show native controls
-- `id` (Id, Advanced) — optional identifier for external scripting
+- Built‑in play/pause controls
+- Optional looping for ambient or background tracks
 
 
 ### Audio (Wavesurfer)
-Waveform audio player built on Wavesurfer.js with play/pause UI, hover preview, time/duration, and theming via CSS variables.
+A waveform audio player with a polished, branded feel.
 
-Files:
-- `src/AudioWavesurfer.tsx:1` main component
-- `src/AudioWavesurfer.webflow.tsx:1` Webflow wrapper/props
-- `src/AudioWavesurfer.css:1` styles and theme variables
-
-Props (Webflow):
-- `mp3` (Link) — asset or external MP3
-- `loop` (Boolean) — loop playback
-- `preload` (Boolean) — Auto (true) or Off (false)
-- `id` (Id, Advanced) — optional unique player ID for external control
-- `namespace` (Id, Advanced) — optional namespace for ID scoping
-- `debug` (Boolean, Advanced) — console logging
-
-Styling (CSS variables):
-- Colors — `--cc-audio-wavesurfer-top`, `--cc-audio-wavesurfer-separator`, `--cc-audio-wavesurfer-bottom`
-- Progress — `--cc-audio-wavesurfer-progress-top`, `--cc-audio-wavesurfer-progress-mid`, `--cc-audio-wavesurfer-progress-bottom`
-- UI — `--cc-audio-wavesurfer-button-size`, `--cc-audio-wavesurfer-icon`, `--cc-audio-wavesurfer-separator-pos`, `--cc-audio-wavesurfer-bar-width`, `--cc-audio-wavesurfer-min-width`
-
-Behavior:
-- Pauses other players on play (via MediaPlayerManager)
-- External control available when `id` is provided
+- Visual waveform with play/pause
+- Click or hover to preview
+- Shows time and duration
+- Customizable appearance to match your site
+- Automatically pauses other audio when one starts
 
 
 ### Rive (Canvas)
-Rive animation player using the Canvas renderer (broad compatibility; no vector feathering).
+Reliable Rive animation playback with broad compatibility.
 
-Files:
-- `src/RiveCanvas.tsx:1` main component
-- `src/RiveCanvas.webflow.tsx:1` Webflow wrapper/props
-
-Props (Webflow):
-- `riveUrl` (Link) — .riv file (asset or URL)
-- `artboard` (Text) — artboard name (optional)
-- `stateMachine` (Text) — state machine name (optional)
-- `fit` (Variant) — Contain | Cover | Fill | Fit Width | Fit Height | None | Scale Down
-- `align` (Variant) — Center | Top Center | Top Right | Center Left | Center Right | Bottom Left | Bottom Center | Bottom Right
-- `width` (Text) — container width (default 100%)
-- `height` (Text) — container height (default 500px)
-- `responsive` (Boolean) — responsive container sizing
-- `autoplay` (Boolean) — start automatically
-- `touchScrollBehavior` (Boolean) — allow page scroll while touching canvas
-- `automaticallyHandleEvents` (Boolean) — handle Rive events (e.g. open URL)
-- `lazy` (Boolean, Advanced) — lazy‑load
+- Flexible sizing and alignment
+- Autoplay support and responsive layout
+- Optional handling of basic animation events
 
 
 ### Rive (WebGL2)
-Rive animation player using the WebGL2 renderer (supports vector feathering; requires WebGL2 support).
+High‑quality Rive animation playback on capable devices.
 
-Files:
-- `src/RiveWebGL2.tsx:1` main component
-- `src/RiveWebGL2.webflow.tsx:1` Webflow wrapper/props
-
-Props: same as Rive (Canvas).
-
-Notes:
-- Displays a friendly fallback if WebGL2 is unavailable.
+- Enhanced visual fidelity for supported browsers
+- Same sizing and playback options as the Canvas version
+- Graceful fallback message when not supported
 
 
 ### Spline
-Interactive 3D Spline scene viewer using `@splinetool/runtime`.
+Embed interactive 3D scenes to showcase products and concepts.
 
-Files:
-- `src/Spline.tsx:1` main component
-- `src/Spline.webflow.tsx:1` Webflow wrapper/props
-
-Props (Webflow):
-- `splineUrl` (Link) — Spline scene URL
-- `width` (Text) — container width (default 100%)
-- `height` (Text) — container height (default 500px)
-- `responsive` (Boolean) — responsive container sizing
-- `lazy` (Boolean) — lazy‑load
+- Responsive container with adjustable size
+- Loads on demand to keep pages feeling fast
 
 
 ### Flipbook
-High‑resolution, drag‑to‑rotate product viewer. Accepts a JSON file listing image URLs and supports clockwise/counterclockwise direction.
+High‑resolution, drag‑to‑rotate product viewer for smooth 360° exploration.
 
-Files:
-- `src/Flipbook.tsx:1` main component
-- `src/Flipbook.webflow.tsx:1` Webflow wrapper/props
-
-Props (Webflow):
-- `jsonUrl` (Link) — URL to a JSON file with an `images` array
-- `direction` (Boolean) — Forward (true) or Backward (false)
-
-JSON format:
-```json
-{
-  "images": [
-    "frame_0001.jpg",
-    "frame_0002.jpg"
-  ]
-}
-```
-
-Features:
-- Drag or touch to rotate; wraps 0–360° seamlessly
-- Shows current angle and frame; hover overlay preview
-- Preloads images; handles relative paths based on the JSON file’s location
-- Error/loading states and mobile touch support
+- Seamless rotation in either direction
+- Angle and frame indicators for precision
+- Fast image loading with built‑in loading and error states
+- Touch‑friendly for mobile devices
 
 
-## Global JS APIs
 
-### MediaPlayerManager (global)
-The waveform players register with a global manager for coordinated control.
-
-- Global: `window.mediaPlayerManager`
-- Source: `src/MediaPlayerManager.tsx:1`
-
-Methods:
-- `playPlayer(id: string): boolean`
-- `pausePlayer(id: string): boolean`
-- `pauseAll(): void`
-- `getPlayerIds(): string[]`
-
-Example:
-```html
-<button onclick="window.mediaPlayerManager.pauseAll()">Pause All</button>
-```
-
-
-## Usage (Webflow)
-
-- Add the component from the “Media” group.
-- Set URLs via Link/Text props (assets or external URLs).
-- For assets hosted in Webflow, use the Asset picker in the Link prop.
-- For external control of audio players, set a unique `id` and call the global API.
-
-
-## Development
-
-Local dev and build:
-- `npm run dev` — start Vite dev server
-- `npm run build` — build
-- `npm run preview` — preview build
-- `npm run update-cli` — update Webflow CLI packages
-
-Version and docs URL constants: `src/version.ts:1`
-
-
-## Notes
-
-- Canvas vs WebGL2: WebGL2 supports vector feathering but requires browser support; Canvas is broadly compatible.
-- Background Video never autoplays in Webflow Designer (`interactive=false`) to avoid surprises while editing.
-- Flipbook processes relative image paths against the JSON file URL for portability.
