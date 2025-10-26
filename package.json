@@ -25,6 +25,8 @@
     "build": "vite build",
     "preview": "vite preview",
     "deploy": "sygnal-deploy",
+    "deploy-prod": "sygnal-deploy --release",
+    "deploy-test": "sygnal-deploy --prerelease",
     "update-cli": "npm i --save-dev @webflow/webflow-cli@latest @webflow/data-types@latest @webflow/react@latest"
   },
   "eslintConfig": {
@@ -46,7 +48,7 @@
     ]
   },
   "devDependencies": {
-    "@sygnal/code-component": "^0.3.0",
+    "@sygnal/code-component": "^0.5.2",
     "@vitejs/plugin-react": "^5.0.2",
     "@webflow/data-types": "^1.0.1",
     "@webflow/react": "^1.0.1",
