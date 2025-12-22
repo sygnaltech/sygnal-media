@@ -5,14 +5,38 @@ import "./AudioWavesurfer.css";
 
 interface AudioWavesurferProps {
   id?: string; // Optional - if provided, enables external control
-  namespace?: string; 
+  namespace?: string;
   loop: string;
   mp3: any;
   preload: string;
-  debug?: boolean; 
+  debug?: boolean;
+  waveformData?: string;
 }
 
-export const AudioWavesurfer = ({ id, loop, mp3, preload, debug }: AudioWavesurferProps) => {
+// Helper function to encode peaks to hex string with duration
+function encodePeaks(peaks: Float32Array, duration: number): string {
+  const hex = Array.from(peaks)
+    .map(p => Math.floor((p + 1) * 127.5).toString(16).padStart(2, '0'))
+    .join('');
+  return `${duration}|${hex}`;
+}
+
+// Helper function to decode waveform data string to peaks and duration
+function decodeWaveformData(data: string): { peaks: Float32Array, duration: number } {
+  const [durationStr, hexData] = data.split('|');
+  const duration = parseFloat(durationStr);
+
+  const peaks = new Float32Array(hexData.length / 2);
+  for (let i = 0; i < peaks.length; i++) {
+    const hex = hexData.substring(i * 2, i * 2 + 2);
+    const value = parseInt(hex, 16);
+    peaks[i] = (value / 127.5) - 1; // Convert back to -1 to 1 range
+  }
+
+  return { peaks, duration };
+}
+
+export const AudioWavesurfer = ({ id, loop, mp3, preload, debug, waveformData }: AudioWavesurferProps) => {
   const waveformRef = useRef<HTMLDivElement>(null);
   const playerRef = useRef<HTMLDivElement>(null);
   const wavesurferRef = useRef<WaveSurfer | null>(null);
@@ -85,23 +109,39 @@ export const AudioWavesurfer = ({ id, loop, mp3, preload, debug }: AudioWavesurf
       gradient.addColorStop(1, bottom); 
 
       const progressGradient = ctx.createLinearGradient(0, 0, 0, h);
-      progressGradient.addColorStop(0, progTop); 
-      progressGradient.addColorStop(0.7, progMid); 
-      progressGradient.addColorStop(0.701, separator); 
-      progressGradient.addColorStop(0.702, separator); 
-      progressGradient.addColorStop(0.703, progBottom); 
-      progressGradient.addColorStop(1, progBottom); 
+      progressGradient.addColorStop(0, progTop);
+      progressGradient.addColorStop(0.7, progMid);
+      progressGradient.addColorStop(0.701, separator);
+      progressGradient.addColorStop(0.702, separator);
+      progressGradient.addColorStop(0.703, progBottom);
+      progressGradient.addColorStop(1, progBottom);
 
-      // Instantiate WaveSurfer 
-      const wavesurfer = WaveSurfer.create({
+      // Instantiate WaveSurfer
+      // Check if we have pre-computed waveform data
+      let wavesurferConfig: any = {
         container: waveformRef.current,
         waveColor: gradient,
         progressColor: progressGradient,
         barWidth: 2,
-        url: mp3.href,
-      });
+      };
 
+      if (waveformData && waveformData.trim()) {
+        // Pre-render from waveform data
+        const { peaks, duration } = decodeWaveformData(waveformData);
+        wavesurferConfig.peaks = [peaks];
+        wavesurferConfig.duration = duration;
+      } else {
+        // Normal load from URL
+        wavesurferConfig.url = mp3.href;
+      }
+
+      const wavesurfer = WaveSurfer.create(wavesurferConfig);
       wavesurferRef.current = wavesurfer;
+
+      // If we pre-rendered, now load actual audio for playback
+      if (waveformData && waveformData.trim()) {
+        wavesurfer.load(mp3.href);
+      }
 
       // Create MediaPlayer wrapper with optional id
       const mediaPlayer: MediaPlayer = {
@@ -194,6 +234,17 @@ export const AudioWavesurfer = ({ id, loop, mp3, preload, debug }: AudioWavesurf
 
       wavesurfer.on("decode", (duration) => {
         if (durationEl) durationEl.textContent = formatTime(duration);
+
+        // Generate waveform data for debug mode
+        if (debug && (!waveformData || !waveformData.trim())) {
+          const exportedPeaks = wavesurfer.exportPeaks();
+          const peaks = exportedPeaks[0]; // Use channel 0 (mono or left channel)
+          const encodedData = encodePeaks(peaks, duration);
+
+          console.log(`Waveform data for "${mp3.href}":`);
+          console.log(encodedData);
+          console.log(`(Duration: ${duration}s, ${peaks.length} samples)`);
+        }
       });
 
       wavesurfer.on("timeupdate", (currentTime) => {

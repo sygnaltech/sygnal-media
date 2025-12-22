@@ -44,12 +44,19 @@ export default declareComponent(AudioWavesurfer, {
 
         debug: props.Boolean({
             name: "Debug",
-            defaultValue: false, 
+            defaultValue: false,
             trueLabel: 'Debug On',
             falseLabel: 'Debug Off',
-            group: "Advanced",  
-            tooltip: "Enable to generate console log messages." 
-        }), 
+            group: "Advanced",
+            tooltip: "Enable to generate console log messages."
+        }),
+
+        waveformData: props.Text({
+            name: "Waveform Data",
+            defaultValue: "",
+            tooltip: "Pre-encoded waveform data for instant rendering. Generate using Debug mode.",
+            group: "Advanced"
+        }),
 
     }
 });
