@@ -19,12 +19,29 @@ function encodePeaks(peaks: Float32Array, duration: number): string {
   const hex = Array.from(peaks)
     .map(p => Math.floor((p + 1) * 127.5).toString(16).padStart(2, '0'))
     .join('');
-  return `${duration}|${hex}`;
+  return `v1.0|${duration}|${hex}`;
 }
 
 // Helper function to decode waveform data string to peaks and duration
 function decodeWaveformData(data: string): { peaks: Float32Array, duration: number } {
-  const [durationStr, hexData] = data.split('|');
+  const parts = data.split('|');
+
+  // Check for version prefix
+  let version = 'v1.0';
+  let durationStr: string;
+  let hexData: string;
+
+  if (parts[0].startsWith('v')) {
+    // Versioned format: v1.0|duration|hexdata
+    version = parts[0];
+    durationStr = parts[1];
+    hexData = parts[2];
+  } else {
+    // Legacy format without version: duration|hexdata
+    durationStr = parts[0];
+    hexData = parts[1];
+  }
+
   const duration = parseFloat(durationStr);
 
   const peaks = new Float32Array(hexData.length / 2);

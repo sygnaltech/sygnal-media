@@ -1,4 +1,6 @@
-export const VERSION = '0.1.7'; 
-export const DOCS = 'https://components.sygnal.com/sygnal-webflow-components'; 
 
+import packageJson from '../package.json';
+
+export const VERSION = packageJson.version;
+export const DOCS = 'https://components.sygnal.com/sygnal-webflow-components'; 
 

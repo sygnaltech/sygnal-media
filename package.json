@@ -1,6 +1,6 @@
 {
   "name": "sygnal-media",
-  "version": "0.1.0",
+  "version": "0.1.8",
   "private": true,
   "dependencies": {
     "@rive-app/canvas": "^2.31.6",
