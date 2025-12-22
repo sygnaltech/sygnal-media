@@ -58,6 +58,13 @@ export default declareComponent(AudioWavesurfer, {
             group: "Advanced"
         }),
 
+        label: props.Text({
+            name: "Label",
+            defaultValue: "",
+            tooltip: "Optional label for identifying this audio in debug output.",
+            group: "Advanced"
+        }),
+
     }
 });
 

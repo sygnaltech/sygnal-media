@@ -12,6 +12,7 @@
 /build
 /dist
 /public
+/deploy
 
 # misc
 .DS_Store

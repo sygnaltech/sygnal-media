@@ -11,6 +11,7 @@ interface AudioWavesurferProps {
   preload: string;
   debug?: boolean;
   waveformData?: string;
+  label?: string;
 }
 
 // Helper function to encode peaks to hex string with duration
@@ -36,7 +37,7 @@ function decodeWaveformData(data: string): { peaks: Float32Array, duration: numb
   return { peaks, duration };
 }
 
-export const AudioWavesurfer = ({ id, loop, mp3, preload, debug, waveformData }: AudioWavesurferProps) => {
+export const AudioWavesurfer = ({ id, loop, mp3, preload, debug, waveformData, label }: AudioWavesurferProps) => {
   const waveformRef = useRef<HTMLDivElement>(null);
   const playerRef = useRef<HTMLDivElement>(null);
   const wavesurferRef = useRef<WaveSurfer | null>(null);
@@ -241,7 +242,11 @@ export const AudioWavesurfer = ({ id, loop, mp3, preload, debug, waveformData }:
           const peaks = exportedPeaks[0]; // Use channel 0 (mono or left channel)
           const encodedData = encodePeaks(peaks, duration);
 
-          console.log(`Waveform data for "${mp3.href}":`);
+          if (label && label.trim()) {
+            console.log(`Label: ${label}`);
+          }
+          console.log(`Filename: ${mp3.href}`);
+          console.log(`Waveform data:`);
           console.log(encodedData);
           console.log(`(Duration: ${duration}s, ${peaks.length} samples)`);
         }
