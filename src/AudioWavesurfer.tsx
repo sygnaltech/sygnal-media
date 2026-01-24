@@ -391,11 +391,11 @@ export const AudioWavesurfer = ({ id, loop, mp3, preload, debug, waveformData, l
       {showDesignerUI && (
         <div className="waveform-copy-row">
           <button
-            className="waveform-copy-btn"
+            className={`waveform-copy-btn${copyFeedback ? ' copied' : waveformData && waveformData.trim() ? ' has-data' : ''}`}
             onClick={handleCopyWaveformData}
             type="button"
           >
-            {copyFeedback ? '✓ Copied!' : 'Copy Waveform Data'}
+            {copyFeedback ? 'Copied!' : 'Copy Waveform Data'}
           </button>
         </div>
       )}

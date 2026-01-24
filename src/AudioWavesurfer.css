@@ -84,9 +84,10 @@
 /* Designer Mode - Waveform Copy Button */
 .waveform-copy-row {
   margin-top: 8px;
-  text-align: center;
+  text-align: right;
 }
 
+/* Blue - new/generated data (no existing waveformData) */
 .waveform-copy-btn {
   background: #4A90D9;
   color: white;
@@ -104,4 +105,26 @@
 
 .waveform-copy-btn:active {
   background: #2A6BB8;
+}
+
+/* Gray - existing waveformData already set */
+.waveform-copy-btn.has-data {
+  background: #888888;
+}
+
+.waveform-copy-btn.has-data:hover {
+  background: #777777;
+}
+
+.waveform-copy-btn.has-data:active {
+  background: #666666;
+}
+
+/* Green - copied feedback state */
+.waveform-copy-btn.copied {
+  background: #4CAF50;
+}
+
+.waveform-copy-btn.copied:hover {
+  background: #4CAF50;
 }
