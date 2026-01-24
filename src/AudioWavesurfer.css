@@ -1,15 +1,14 @@
-
-:root {
-  --cc-audio-wavesurfer-top: #656666;
-  --cc-audio-wavesurfer-separator: #ffffff;
-  --cc-audio-wavesurfer-bottom: #B1B1B1;
-
-  --cc-audio-wavesurfer-progress-top: #EE772F;
-  --cc-audio-wavesurfer-progress-mid: #EB4926;
-  --cc-audio-wavesurfer-progress-bottom: #F6B094;
-
-  --cc-audio-wavesurfer-button-size: 80px; 
-}
+/*
+ * CSS Variables (set these externally to customize):
+ * --cc-audio-wavesurfer-top: #656666
+ * --cc-audio-wavesurfer-separator: #ffffff
+ * --cc-audio-wavesurfer-bottom: #B1B1B1
+ * --cc-audio-wavesurfer-progress-top: #EE772F
+ * --cc-audio-wavesurfer-progress-mid: #EB4926
+ * --cc-audio-wavesurfer-progress-bottom: #F6B094
+ * --cc-audio-wavesurfer-button-size: 80px
+ * --cc-audio-wavesurfer-icon: #333333
+ */
 
 #player #pause {
   display: none; 
