@@ -80,3 +80,28 @@
     #duration {
       right: 0;
     }
+
+/* Designer Mode - Waveform Copy Button */
+.waveform-copy-row {
+  margin-top: 8px;
+  text-align: center;
+}
+
+.waveform-copy-btn {
+  background: #4A90D9;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 16px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.waveform-copy-btn:hover {
+  background: #3A7BC8;
+}
+
+.waveform-copy-btn:active {
+  background: #2A6BB8;
+}

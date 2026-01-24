@@ -51,6 +51,15 @@ export default declareComponent(AudioWavesurfer, {
             tooltip: "Enable to generate console log messages."
         }),
 
+        designerMode: props.Boolean({
+            name: "Designer Mode",
+            defaultValue: false,
+            trueLabel: 'On',
+            falseLabel: 'Off',
+            group: "Advanced",
+            tooltip: "Shows a button to copy waveform data in Webflow Designer only."
+        }),
+
         waveformData: props.Text({
             name: "Waveform Data",
             defaultValue: "",

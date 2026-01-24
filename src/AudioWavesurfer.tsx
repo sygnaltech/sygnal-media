@@ -1,4 +1,5 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import { useWebflowContext } from '@webflow/react';
 import WaveSurfer from "wavesurfer.js";
 import { mediaPlayerManager, MediaPlayer } from "./MediaPlayerManager";
 import "./AudioWavesurfer.css";
@@ -12,6 +13,7 @@ interface AudioWavesurferProps {
   debug?: boolean;
   waveformData?: string;
   label?: string;
+  designerMode?: boolean;
 }
 
 // Helper function to encode peaks to hex string with duration
@@ -54,11 +56,65 @@ function decodeWaveformData(data: string): { peaks: Float32Array, duration: numb
   return { peaks, duration };
 }
 
-export const AudioWavesurfer = ({ id, loop, mp3, preload, debug, waveformData, label }: AudioWavesurferProps) => {
+export const AudioWavesurfer = ({ id, loop, mp3, preload, debug, waveformData, label, designerMode }: AudioWavesurferProps) => {
   const waveformRef = useRef<HTMLDivElement>(null);
   const playerRef = useRef<HTMLDivElement>(null);
   const wavesurferRef = useRef<WaveSurfer | null>(null);
   const mediaPlayerRef = useRef<MediaPlayer | null>(null);
+
+  // Designer mode state
+  const [generatedWaveformData, setGeneratedWaveformData] = useState<string | null>(null);
+  const [copyFeedback, setCopyFeedback] = useState(false);
+
+  // Detect if we're in Webflow Designer (non-interactive mode)
+  let isInDesigner = false;
+  try {
+    const context = useWebflowContext();
+    isInDesigner = !context.interactive;
+  } catch {
+    isInDesigner = false;
+  }
+
+  // Show button if we have generated data OR existing waveformData to display
+  const dataToShow = generatedWaveformData || (waveformData && waveformData.trim() ? waveformData : null);
+  const showDesignerUI = designerMode && isInDesigner && dataToShow;
+
+  // Copy handler for designer mode - with fallback for iframe restrictions
+  const handleCopyWaveformData = async () => {
+    if (dataToShow) {
+      let copied = false;
+
+      // Try modern clipboard API first
+      try {
+        await navigator.clipboard.writeText(dataToShow);
+        copied = true;
+      } catch {
+        // Fallback: use execCommand with temporary textarea
+        try {
+          const textarea = document.createElement('textarea');
+          textarea.value = dataToShow;
+          textarea.style.position = 'fixed';
+          textarea.style.left = '-9999px';
+          textarea.style.top = '-9999px';
+          document.body.appendChild(textarea);
+          textarea.select();
+          copied = document.execCommand('copy');
+          document.body.removeChild(textarea);
+        } catch {
+          copied = false;
+        }
+      }
+
+      if (copied) {
+        setCopyFeedback(true);
+        setTimeout(() => setCopyFeedback(false), 2000);
+      } else {
+        // Last resort: log to console and alert user
+        console.log('Waveform data (copy manually):', dataToShow);
+        alert('Could not copy to clipboard. Data logged to console.');
+      }
+    }
+  };
 
   useEffect(() => {
     const initWaveSurfer = async () => {
@@ -253,19 +309,27 @@ export const AudioWavesurfer = ({ id, loop, mp3, preload, debug, waveformData, l
       wavesurfer.on("decode", (duration) => {
         if (durationEl) durationEl.textContent = formatTime(duration);
 
-        // Generate waveform data for debug mode
-        if (debug && (!waveformData || !waveformData.trim())) {
+        // Generate waveform data for designerMode or debug mode
+        if ((designerMode || debug) && (!waveformData || !waveformData.trim())) {
           const exportedPeaks = wavesurfer.exportPeaks();
           const peaks = exportedPeaks[0]; // Use channel 0 (mono or left channel)
           const encodedData = encodePeaks(peaks, duration);
 
-          if (label && label.trim()) {
-            console.log(`Label: ${label}`);
+          // Store for designer mode copy button
+          if (designerMode) {
+            setGeneratedWaveformData(encodedData);
           }
-          console.log(`Filename: ${mp3.href}`);
-          console.log(`Waveform data:`);
-          console.log(encodedData);
-          console.log(`(Duration: ${duration}s, ${peaks.length} samples)`);
+
+          // Console output only when debug is enabled
+          if (debug) {
+            if (label && label.trim()) {
+              console.log(`Label: ${label}`);
+            }
+            console.log(`Filename: ${mp3.href}`);
+            console.log(`Waveform data:`);
+            console.log(encodedData);
+            console.log(`(Duration: ${duration}s, ${peaks.length} samples)`);
+          }
         }
       });
 
@@ -299,28 +363,42 @@ export const AudioWavesurfer = ({ id, loop, mp3, preload, debug, waveformData, l
   }, [id, mp3]);
 
   return (
-    <div
-      id="player"
-      ref={playerRef}
-      style={{ minWidth: "var(--cc-audio-wavesurfer-min-width)" }}
-    >
-      <div>
-        <div id="play">
-          <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="100%" height="100%" viewBox="0 0 24 24">
-            <path fill="currentColor" d="M12 2C6.475 2 2 6.475 2 12s4.475 10 10 10s10-4.475 10-10S17.525 2 12 2m-2 14.5v-9l6 4.5z" />
-          </svg>
+    <>
+      <div
+        id="player"
+        ref={playerRef}
+        style={{ minWidth: "var(--cc-audio-wavesurfer-min-width)" }}
+      >
+        <div>
+          <div id="play">
+            <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="100%" height="100%" viewBox="0 0 24 24">
+              <path fill="currentColor" d="M12 2C6.475 2 2 6.475 2 12s4.475 10 10 10s10-4.475 10-10S17.525 2 12 2m-2 14.5v-9l6 4.5z" />
+            </svg>
+          </div>
+          <div id="pause">
+            <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="100%" height="100%" viewBox="0 0 24 24">
+              <path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2m-1 14H9V8h2zm4 0h-2V8h2z" />
+            </svg>
+          </div>
         </div>
-        <div id="pause">
-          <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="100%" height="100%" viewBox="0 0 24 24">
-            <path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2m-1 14H9V8h2zm4 0h-2V8h2z" />
-          </svg>
+        <div id="waveform" ref={waveformRef}>
+          <div id="time">0:00</div>
+          <div id="duration">0:00</div>
+          <div id="hover"></div>
         </div>
       </div>
-      <div id="waveform" ref={waveformRef}>
-        <div id="time">0:00</div>
-        <div id="duration">0:00</div>
-        <div id="hover"></div>
-      </div>
-    </div>
+
+      {showDesignerUI && (
+        <div className="waveform-copy-row">
+          <button
+            className="waveform-copy-btn"
+            onClick={handleCopyWaveformData}
+            type="button"
+          >
+            {copyFeedback ? '✓ Copied!' : 'Copy Waveform Data'}
+          </button>
+        </div>
+      )}
+    </>
   );
 };
