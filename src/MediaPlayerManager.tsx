@@ -86,7 +86,7 @@ class MediaPlayerManager {
 
     // Pause players without IDs (unless the active player is one of them)
     this.playersWithoutIds.forEach((player) => {
-      if ((!isActiveById && player !== activePlayer) && !player.isDestroyed) {
+      if ((isActiveById || player !== activePlayer) && !player.isDestroyed) {
         try {
           if (player.managerPause) {
             player.managerPause();
@@ -141,10 +141,19 @@ class MediaPlayerManager {
   }
 }
 
-// Export singleton instance
-export const mediaPlayerManager = new MediaPlayerManager();
+// Use existing global instance or create new one
+// This ensures all code-island components share the same manager
+let mediaPlayerManager: MediaPlayerManager;
 
-// Make it globally accessible for webpage JS
-if (typeof window !== 'undefined') {
-  (window as any).mediaPlayerManager = mediaPlayerManager;
+if (typeof window !== 'undefined' && (window as any).mediaPlayerManager) {
+  // Reuse existing global instance
+  mediaPlayerManager = (window as any).mediaPlayerManager;
+} else {
+  // Create new instance and make it globally accessible
+  mediaPlayerManager = new MediaPlayerManager();
+  if (typeof window !== 'undefined') {
+    (window as any).mediaPlayerManager = mediaPlayerManager;
+  }
 }
+
+export { mediaPlayerManager };
