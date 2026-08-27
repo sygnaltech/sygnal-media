@@ -15,10 +15,20 @@ export interface VideoPlayerProps {
   playbackMode?: VideoPlaybackMode;
   loopVideo?: boolean;
   playIconColor?: string;
+  playButtonSize?: string;
   audioIconColor?: string;
   audioButtonColor?: string;
+  audioButtonSize?: string;
   debug?: boolean;
 }
+
+// Accepts any CSS length — 4.5rem, 72px, 10%, 8vw — and treats a bare number
+// as pixels, so "72" and "72px" both work.
+const parseSize = (value?: string): string | undefined => {
+  const trimmed = value?.trim();
+  if (!trimmed) return undefined;
+  return /^-?\d*\.?\d+$/.test(trimmed) ? `${trimmed}px` : trimmed;
+};
 
 const PlayIcon = () => (
   <svg
@@ -84,8 +94,10 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
   playbackMode = 'Standard',
   loopVideo = true,
   playIconColor,
+  playButtonSize,
   audioIconColor,
   audioButtonColor,
+  audioButtonSize,
   debug = false,
 }) => {
   const { interactive } = useWebflowContext();
@@ -209,8 +221,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
     }
   };
 
-  const toggleAudio = (event: React.MouseEvent) => {
-    event.stopPropagation();
+  const toggleAudio = () => {
     const video = videoRef.current;
     if (!video) return;
 
@@ -232,9 +243,18 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
     }
   };
 
+  // The whole video surface is the control: play/pause in Standard mode,
+  // mute/unmute in the unmute mode. The buttons themselves stop propagation
+  // so a click on one doesn't toggle twice.
   const handleSurfaceClick = () => {
-    if (isStandard) togglePlayPause();
+    if (isStandard) {
+      togglePlayPause();
+    } else if (hasAudioButton) {
+      toggleAudio();
+    }
   };
+
+  const isSurfaceClickable = isStandard || hasAudioButton;
 
   const videoUrls = [videoUrlMp4, videoUrlWebm].filter(Boolean).join(',');
   const posterSrc = posterImage?.src;
@@ -247,13 +267,18 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
 
   const aspectRatioValue = getAspectRatioStyle();
 
-  // Colour props are applied as CSS custom properties, and only when set, so
-  // externally-defined variables still win when a prop is left blank.
+  // Colour and size props are applied as CSS custom properties, and only when
+  // set, so externally-defined variables still win when a prop is left blank.
+  const playSize = parseSize(playButtonSize);
+  const audioSize = parseSize(audioButtonSize);
+
   const styleVars: Record<string, string> = {};
   if (aspectRatioValue) styleVars.aspectRatio = aspectRatioValue;
   if (playIconColor) styleVars['--cc-video-player-play-color'] = playIconColor;
+  if (playSize) styleVars['--cc-video-player-play-size'] = playSize;
   if (audioIconColor) styleVars['--cc-video-player-audio-color'] = audioIconColor;
   if (audioButtonColor) styleVars['--cc-video-player-audio-bg'] = audioButtonColor;
+  if (audioSize) styleVars['--cc-video-player-audio-size'] = audioSize;
 
   if (debug) {
     console.log('[VideoPlayer] Render', {
@@ -272,7 +297,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
       data-autoplay={isStandard ? 'false' : 'true'}
       data-loop={loopVideo ? 'true' : 'false'}
       data-wf-ignore="true"
-      className={`video-player${isStandard ? ' video-player--clickable' : ''}`}
+      className={`video-player${isSurfaceClickable ? ' video-player--clickable' : ''}`}
       style={styleVars as React.CSSProperties}
       onClick={handleSurfaceClick}
     >
@@ -342,7 +367,10 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
           aria-label={isMuted ? 'Unmute video' : 'Mute video'}
           aria-pressed={!isMuted}
           aria-controls={videoId.current}
-          onClick={toggleAudio}
+          onClick={(event) => {
+            event.stopPropagation();
+            toggleAudio();
+          }}
         >
           {isMuted ? <AudioMutedIcon /> : <AudioOnIcon />}
         </button>

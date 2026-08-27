@@ -44,6 +44,11 @@ export default declareComponent(VideoPlayer, {
       group: 'Colors',
       tooltip: 'Any CSS color for the centred play button, e.g. #ffffff. Leave blank to use --cc-video-player-play-color.',
     }),
+    playButtonSize: props.Text({
+      name: 'Play Button Size',
+      group: 'Size',
+      tooltip: 'Width of the play button as any CSS length — 4.5rem, 72px, 10%, 8vw. A percentage is a percentage of the video frame width. A bare number is treated as pixels. Leave blank to use --cc-video-player-play-size.',
+    }),
     audioIconColor: props.Text({
       name: 'Audio Icon Color',
       group: 'Colors',
@@ -53,6 +58,11 @@ export default declareComponent(VideoPlayer, {
       name: 'Audio Button Color',
       group: 'Colors',
       tooltip: 'Any CSS color for the circle behind the speaker icon, e.g. rgba(0, 0, 0, 0.5). Leave blank to use --cc-video-player-audio-bg.',
+    }),
+    audioButtonSize: props.Text({
+      name: 'Audio Button Size',
+      group: 'Size',
+      tooltip: 'Width of the audio button as any CSS length — 3rem, 48px, 6%, 5vw. A percentage is a percentage of the video frame width. A bare number is treated as pixels. Leave blank to use --cc-video-player-audio-size.',
     }),
     debug: props.Boolean({
       name: 'Debug',

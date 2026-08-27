@@ -1,11 +1,15 @@
 /*
  * CSS Variables (set these externally to customize, or use the component's
- * colour props in the Webflow Designer — props win over these when set):
+ * colour/size props in the Webflow Designer — props win over these when set):
  * --cc-video-player-play-color: #ffffff
  * --cc-video-player-play-size: 4.5rem
  * --cc-video-player-audio-color: #ffffff
  * --cc-video-player-audio-bg: rgba(0, 0, 0, 0.5)
  * --cc-video-player-audio-size: 3rem
+ *
+ * The two sizes set the button WIDTH; height follows from a 1:1 aspect ratio,
+ * so a percentage value is a percentage of the video frame's width and the
+ * buttons stay circular.
  */
 
 .video-player {
@@ -41,7 +45,8 @@
   align-items: center;
   justify-content: center;
   width: var(--cc-video-player-play-size, 4.5rem);
-  height: var(--cc-video-player-play-size, 4.5rem);
+  height: auto;
+  aspect-ratio: 1;
   padding: 0;
   background: none;
   border: none;
@@ -58,7 +63,7 @@
 
 .video-player--play svg {
   width: 100%;
-  height: 100%;
+  height: auto;
   display: block;
 }
 
@@ -71,7 +76,8 @@
   align-items: center;
   justify-content: center;
   width: var(--cc-video-player-audio-size, 3rem);
-  height: var(--cc-video-player-audio-size, 3rem);
+  height: auto;
+  aspect-ratio: 1;
   padding: 0;
   background-color: var(--cc-video-player-audio-bg, rgba(0, 0, 0, 0.5));
   border: none;
@@ -88,6 +94,6 @@
 
 .video-player--audio svg {
   width: 55%;
-  height: 55%;
+  height: auto;
   display: block;
 }
