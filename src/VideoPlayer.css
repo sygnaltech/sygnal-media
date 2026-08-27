@@ -1,0 +1,93 @@
+/*
+ * CSS Variables (set these externally to customize, or use the component's
+ * colour props in the Webflow Designer — props win over these when set):
+ * --cc-video-player-play-color: #ffffff
+ * --cc-video-player-play-size: 4.5rem
+ * --cc-video-player-audio-color: #ffffff
+ * --cc-video-player-audio-bg: rgba(0, 0, 0, 0.5)
+ * --cc-video-player-audio-size: 3rem
+ */
+
+.video-player {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  min-height: 300px;
+}
+
+.video-player video {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  transform: translate(-50%, -50%);
+  object-fit: cover;
+  background-size: cover;
+  background-position: 50% 50%;
+}
+
+.video-player--clickable {
+  cursor: pointer;
+}
+
+/* Centred play button — Standard mode, shown while paused */
+.video-player--play {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--cc-video-player-play-size, 4.5rem);
+  height: var(--cc-video-player-play-size, 4.5rem);
+  padding: 0;
+  background: none;
+  border: none;
+  border-radius: 50%;
+  color: var(--cc-video-player-play-color, #ffffff);
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+  z-index: 2;
+}
+
+.video-player--play:hover {
+  opacity: 0.8;
+}
+
+.video-player--play svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* Lower-right audio button — Autoplay Muted with Unmute mode */
+.video-player--audio {
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--cc-video-player-audio-size, 3rem);
+  height: var(--cc-video-player-audio-size, 3rem);
+  padding: 0;
+  background-color: var(--cc-video-player-audio-bg, rgba(0, 0, 0, 0.5));
+  border: none;
+  border-radius: 50%;
+  color: var(--cc-video-player-audio-color, #ffffff);
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+  z-index: 2;
+}
+
+.video-player--audio:hover {
+  opacity: 0.85;
+}
+
+.video-player--audio svg {
+  width: 55%;
+  height: 55%;
+  display: block;
+}
