@@ -2,6 +2,32 @@
   "name": "sygnal-media",
   "version": "0.1.10",
   "private": true,
+  "description": "React and TypeScript media components for Webflow: video, audio waveforms, Rive animations, Spline scenes, and 360-degree product viewers.",
+  "license": "MIT",
+  "author": "Michael Wells <mike@sygnal.com>",
+  "homepage": "https://components.sygnal.com/sygnal-webflow-components/cc/sygnal-media",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sygnaltech/sygnal-media.git"
+  },
+  "bugs": {
+    "url": "https://github.com/sygnaltech/sygnal-media/issues"
+  },
+  "keywords": [
+    "webflow",
+    "webflow-code-components",
+    "react",
+    "typescript",
+    "media",
+    "video-player",
+    "background-video",
+    "audio-player",
+    "wavesurfer",
+    "rive",
+    "spline",
+    "360-product-viewer",
+    "flipbook"
+  ],
   "dependencies": {
     "@rive-app/canvas": "^2.31.6",
     "@rive-app/webgl2": "^2.31.6",
@@ -24,6 +50,7 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
+    "licenses": "node scripts/generate-license-inventory.cjs",
     "deploy": "sygnal-deploy",
     "deploy-prod": "sygnal-deploy --release",
     "deploy-test": "sygnal-deploy --prerelease",
